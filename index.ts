@@ -1,4 +1,4 @@
-import { createUser, updateUser, scanUsers } from "./actions";
+import { createUsersTable, createUser, updateUser, scanUsers } from "./actions";
 import { ApolloServer, gql } from "apollo-server";
 
 const typeDefs = gql`
@@ -22,12 +22,52 @@ const typeDefs = gql`
     Items: [Item]
   }
 
+  type BillingModeSummary {
+    BillingMode: String
+    LastUpdateToPayPerRequestDateTime: String
+  }
+
+  type ProvisionedThroughput {
+    LastIncreaseDateTime: String
+    LastDecreaseDateTime: String
+    NumberOfDecreasesToday: Int
+    ReadCapacityUnits: Int
+    WriteCapacityUnits: Int
+  }
+
+  type KeySchema {
+    AttributeName: String
+    KeyType: String
+  }
+
+  type AttributeDefinitions {
+    AttributeName: String
+    AttributeType: String
+  }
+
+  type TableDescription {
+    TableName: String
+    TableStatus: String
+    CreationDateTime: String
+    TableSizeBytes: Int
+    ItemCount: Int
+    TableArn: String
+    BillingModeSummary: BillingModeSummary
+    ProvisionedThroughput: ProvisionedThroughput
+    KeySchema: [KeySchema]
+    AttributeDefinitions: [AttributeDefinitions]
+  }
+
+  type Table {
+    TableDescription: TableDescription
+  }
   type Query {
     user(title: String!): User
     getUsers: Users
   }
 
   type Mutation {
+    createUsersTable: Table
     createUser(username: String!, id: Int!): User
     rateUser(username: String!, id: Int!, rating: Float!): User
   }
@@ -42,6 +82,9 @@ const resolvers = {
     }
   },
   Mutation: {
+    createUsersTable: () => {
+      return createUsersTable();
+    },
     createUser: (obj, args, context, info) => {
       console.log("args", args);
       return createUser({ username: args.username, id: args.id });
