@@ -13,10 +13,14 @@ AWS.config.update({
   // endpoint: "https://dynamodb.us-east-1.amazonaws.com",
   // accessKeyId default can be used while using the downloadable version of DynamoDB.
   // For security reasons, do not store AWS Credentials in your files. Use Amazon Cognito instead.
-  accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
+  accessKeyId: isEnvProduction
+    ? process.env.MY_AWS_ACCESS_KEY_ID
+    : "fakeMyKeyId",
   // secretAccessKey default can be used while using the downloadable version of DynamoDB.
   // For security reasons, do not store AWS Credentials in your files. Use Amazon Cognito instead.
-  secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY
+  secretAccessKey: isEnvProduction
+    ? process.env.MY_AWS_SECRET_ACCESS_KEY
+    : "fakeSecretAccessKey"
 });
 
 /**
@@ -59,30 +63,35 @@ function createMovies() {
 
 /**
  * createItem()
+ * @note this won't return any data
  */
-function createItem() {
+function createItem({ title, year }) {
+  const table = "Movies";
+
   var params = {
-    TableName: "Movies",
+    TableName: table,
     Item: {
-      year: 2015,
-      title: "The Big New Movie",
-      info: {
-        plot: "Nothing happens at all.",
-        rating: 0
-      }
+      year: year,
+      title: title
     }
   };
-  docClient.put(params, function(err, data) {
-    if (err) {
-      console.error(
-        "Unable to add item: " + "\n" + JSON.stringify(err, undefined, 2)
-      );
-    } else {
-      console.log(
-        "PutItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2)
-      );
-    }
-  });
+
+  return docClient
+    .put(params, (err, data) => {
+      if (err) {
+        console.error(
+          "Unable to add item: " + "\n" + JSON.stringify(err, undefined, 2)
+        );
+      } else {
+        console.log(
+          "PutItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2)
+        );
+      }
+    })
+    .promise()
+    .then(result => {
+      return result;
+    });
 }
 // isEnvDevelopment && createItem();
 
@@ -159,4 +168,44 @@ function updateItem() {
 }
 // updateItem();
 
-module.exports = { createItem, createMovies, readItem, updateItem };
+/**
+ * scanItems
+ */
+function scanItems() {
+  var table = "Movies";
+
+  var params = {
+    TableName: table
+    // Key: {
+    //   year: year,
+    //   title: title
+    // },
+    // UpdateExpression: "set info.rating = :r, info.plot=:p, info.actors=:a",
+    // ExpressionAttributeValues: {
+    //   ":r": 5.5,
+    //   ":p": "Everything happens all at once.",
+    //   ":a": ["Larry", "Moe", "Curly"]
+    // },
+    // ReturnValues: "UPDATED_NEW"
+  };
+
+  console.log("Scanning for items...");
+  return docClient
+    .scan(params, function(err, data) {
+      if (err) {
+        console.error(
+          "Unable to update item. Error JSON:",
+          JSON.stringify(err, null, 2)
+        );
+      } else {
+        // console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+      }
+    })
+    .promise()
+    .then(result => {
+      console.log("result", result);
+      return result;
+    });
+}
+
+module.exports = { createItem, createMovies, readItem, updateItem, scanItems };

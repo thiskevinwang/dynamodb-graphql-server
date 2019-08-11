@@ -1,46 +1,14 @@
-const { createItem, createMovies, readItem, updateItem } = require("./actions");
+const {
+  createItem,
+  createMovies,
+  readItem,
+  updateItem,
+  scanItems
+} = require("./actions");
 
 const { ApolloServer, gql } = require("apollo-server");
-const movies = [
-  {
-    Item: {
-      year: 2015,
-      info: {
-        rating: 0,
-        plot: "Nothing happens at all."
-      },
-      title: "The Big New Movie"
-    }
-  },
-  {
-    Item: {
-      year: 2015,
-      info: {
-        rating: 0,
-        plot: "Boop."
-      },
-      title: "Another New Movie"
-    }
-  }
-];
 
-const books = [
-  {
-    title: "Harry Potter and the Chamber of Secrets",
-    author: "J.K. Rowling"
-  },
-  {
-    title: "Jurassic Park",
-    author: "Michael Crichton"
-  }
-];
 const typeDefs = gql`
-  # Old Schema
-  type Book {
-    title: String
-    author: String
-  }
-
   # New Schema
   type Info {
     rating: Int
@@ -57,9 +25,25 @@ const typeDefs = gql`
     Item: Item
   }
 
+  type Items {
+    title: String
+    year: Int
+    info: Info
+  }
+
+  type AllMovies {
+    Count: Int
+    ScannedCount: Int
+    Items: [Item]
+  }
+
   type Query {
     movie(title: String!): Movie
-    books: [Book]
+    getAll: AllMovies
+  }
+
+  type Mutation {
+    submitMovie(title: String!, year: Int!): Movie
   }
 `;
 
@@ -71,7 +55,15 @@ const resolvers = {
       console.log("args", args);
       return readItem({ title: args.title });
     },
-    books: () => books
+    getAll: (obj, args, context, info) => {
+      return scanItems();
+    }
+  },
+  Mutation: {
+    submitMovie: (obj, args, context, info) => {
+      console.log("args", args);
+      return createItem({ title: args.title, year: args.year });
+    }
   }
 };
 
