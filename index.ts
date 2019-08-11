@@ -1,10 +1,10 @@
-const {
+import {
   createItem,
   createMovies,
   readItem,
   updateItem,
   scanItems
-} = require("./actions");
+} from "./actions";
 
 const { ApolloServer, gql } = require("apollo-server");
 

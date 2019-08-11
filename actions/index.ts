@@ -30,7 +30,7 @@ AWS.config.update({
 const dynamodb = new AWS.DynamoDB({ apiVersion: "2012-08-10" });
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-function createMovies() {
+export function createMovies() {
   var params = {
     TableName: "Movies",
     KeySchema: [
@@ -65,7 +65,7 @@ function createMovies() {
  * createItem()
  * @note this won't return any data
  */
-function createItem({ title, year }) {
+export function createItem({ title, year }) {
   const table = "Movies";
 
   var params = {
@@ -98,7 +98,7 @@ function createItem({ title, year }) {
 /**
  * readItem()
  */
-function readItem({ title }) {
+export function readItem({ title }) {
   var table = "Movies";
   var year = 2015;
   // var title = "The Big New Movie";
@@ -132,7 +132,7 @@ function readItem({ title }) {
 /**
  * updateItem
  */
-function updateItem() {
+export function updateItem() {
   var table = "Movies";
   var year = 2015;
   var title = "The Big New Movie";
@@ -171,7 +171,7 @@ function updateItem() {
 /**
  * scanItems
  */
-function scanItems() {
+export function scanItems() {
   var table = "Movies";
 
   var params = {
@@ -207,5 +207,3 @@ function scanItems() {
       return result;
     });
 }
-
-module.exports = { createItem, createMovies, readItem, updateItem, scanItems };
