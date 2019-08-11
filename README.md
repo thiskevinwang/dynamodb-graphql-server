@@ -25,3 +25,7 @@ docker run -p 8000:8000 amazon/dynamodb-local
 Node:
 
 - https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.NodeJs.01.html
+
+### DynamoDB Data Model
+
+- https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.html
