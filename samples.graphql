@@ -1,0 +1,33 @@
+mutation {
+  createUser(username: "kevinwang", id: 1) {
+    Item {
+      id
+      username
+    }
+  }
+}
+
+query {
+  getUsers {
+    Count
+    Items {
+      id
+      username
+      attributes {
+        rating
+      }
+    }
+  }
+}
+
+mutation {
+  rateUser(username: "kevinwang", id: 1, rating: 4.4) {
+    Item {
+      id
+      username
+      attributes {
+        rating
+      }
+    }
+  }
+}

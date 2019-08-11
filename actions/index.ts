@@ -5,6 +5,8 @@ const AWS = require("aws-sdk");
 const isEnvProduction = process.env.NODE_ENV === "production";
 const isEnvDevelopment = process.env.NODE_ENV === "development";
 
+const USERS = "Users";
+
 AWS.config.update({
   region: "us-east-1",
   endpoint: isEnvProduction
@@ -30,16 +32,16 @@ AWS.config.update({
 const dynamodb = new AWS.DynamoDB({ apiVersion: "2012-08-10" });
 const docClient = new AWS.DynamoDB.DocumentClient();
 
-export function createMovies() {
+export function createUsersTable() {
   var params = {
-    TableName: "Movies",
+    TableName: USERS,
     KeySchema: [
-      { AttributeName: "year", KeyType: "HASH" },
-      { AttributeName: "title", KeyType: "RANGE" }
+      { AttributeName: "id", KeyType: "HASH" },
+      { AttributeName: "username", KeyType: "RANGE" }
     ],
     AttributeDefinitions: [
-      { AttributeName: "year", AttributeType: "N" },
-      { AttributeName: "title", AttributeType: "S" }
+      { AttributeName: "id", AttributeType: "N" },
+      { AttributeName: "username", AttributeType: "S" }
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
@@ -59,20 +61,21 @@ export function createMovies() {
     }
   });
 }
-// isEnvDevelopment && createMovies();
+// isEnvDevelopment && createUsersTable();
 
 /**
- * createItem()
+ * createUser()
  * @note this won't return any data
  */
-export function createItem({ title, year }) {
-  const table = "Movies";
+export function createUser({ username, id }) {
+  const table = USERS;
 
   var params = {
     TableName: table,
     Item: {
-      year: year,
-      title: title
+      id: id,
+      username: username,
+      attributes: {}
     }
   };
 
@@ -93,86 +96,52 @@ export function createItem({ title, year }) {
       return result;
     });
 }
-// isEnvDevelopment && createItem();
-
-/**
- * readItem()
- */
-export function readItem({ title }) {
-  var table = "Movies";
-  var year = 2015;
-  // var title = "The Big New Movie";
-
-  var params = {
-    TableName: table,
-    Key: {
-      year: year,
-      title: title
-    }
-  };
-
-  return docClient
-    .get(params, (err, data) => {
-      if (err) {
-        console.log(
-          "Unable to read item: " + "\n" + JSON.stringify(err, undefined, 2)
-        );
-      } else {
-        console.log(
-          "GetItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2)
-        );
-      }
-    })
-    .promise()
-    .then(result => {
-      return result;
-    });
-}
+// isEnvDevelopment && createUser();
 
 /**
  * updateItem
  */
-export function updateItem() {
-  var table = "Movies";
-  var year = 2015;
-  var title = "The Big New Movie";
+export function updateUser({ id, username, rating }) {
+  var table = USERS;
 
   // Update the item, unconditionally,
 
   var params = {
     TableName: table,
     Key: {
-      year: year,
-      title: title
+      id,
+      username
     },
-    UpdateExpression: "set info.rating = :r, info.plot=:p, info.actors=:a",
+    UpdateExpression: "set attributes.rating = :r",
     ExpressionAttributeValues: {
-      ":r": 5.5,
-      ":p": "Everything happens all at once.",
-      ":a": ["Larry", "Moe", "Curly"]
+      ":r": rating
     },
     ReturnValues: "UPDATED_NEW"
   };
 
-  console.log("Updating the item...");
-  docClient.update(params, function(err, data) {
-    if (err) {
-      console.error(
-        "Unable to update item. Error JSON:",
-        JSON.stringify(err, null, 2)
-      );
-    } else {
-      console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-    }
-  });
+  return docClient
+    .update(params, function(err, data) {
+      if (err) {
+        console.error(
+          "Unable to update item. Error JSON:",
+          JSON.stringify(err, null, 2)
+        );
+      } else {
+        console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+      }
+    })
+    .promise()
+    .then(res => {
+      console.log("res", res);
+      return res;
+    });
 }
-// updateItem();
 
 /**
- * scanItems
+ * scanUsers
  */
-export function scanItems() {
-  var table = "Movies";
+export function scanUsers() {
+  var table = USERS;
 
   var params = {
     TableName: table

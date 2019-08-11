@@ -1,49 +1,35 @@
-import {
-  createItem,
-  createMovies,
-  readItem,
-  updateItem,
-  scanItems
-} from "./actions";
-
-const { ApolloServer, gql } = require("apollo-server");
+import { createUser, updateUser, scanUsers } from "./actions";
+import { ApolloServer, gql } from "apollo-server";
 
 const typeDefs = gql`
-  # New Schema
-  type Info {
-    rating: Int
-    plot: String
+  type Attributes {
+    rating: Float
   }
 
   type Item {
-    year: Int
-    title: String
-    info: Info
+    id: Int
+    username: String
+    attributes: Attributes
   }
 
-  type Movie {
+  type User {
     Item: Item
   }
 
-  type Items {
-    title: String
-    year: Int
-    info: Info
-  }
-
-  type AllMovies {
+  type Users {
     Count: Int
     ScannedCount: Int
     Items: [Item]
   }
 
   type Query {
-    movie(title: String!): Movie
-    getAll: AllMovies
+    user(title: String!): User
+    getUsers: Users
   }
 
   type Mutation {
-    submitMovie(title: String!, year: Int!): Movie
+    createUser(username: String!, id: Int!): User
+    rateUser(username: String!, id: Int!, rating: Float!): User
   }
 `;
 
@@ -51,18 +37,21 @@ const typeDefs = gql`
 // schema.  We'll retrieve books from the "books" array above.
 const resolvers = {
   Query: {
-    movie: (obj, args, context, info) => {
-      console.log("args", args);
-      return readItem({ title: args.title });
-    },
-    getAll: (obj, args, context, info) => {
-      return scanItems();
+    getUsers: (obj, args, context, info) => {
+      return scanUsers();
     }
   },
   Mutation: {
-    submitMovie: (obj, args, context, info) => {
+    createUser: (obj, args, context, info) => {
       console.log("args", args);
-      return createItem({ title: args.title, year: args.year });
+      return createUser({ username: args.username, id: args.id });
+    },
+    rateUser: (obj, args, context, info) => {
+      return updateUser({
+        username: args.username,
+        id: args.id,
+        rating: args.rating
+      });
     }
   }
 };
