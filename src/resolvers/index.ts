@@ -1,16 +1,9 @@
-import {
-  createUsersTable,
-  createUser,
-  updateUser,
-  scanUsers
-} from "../../actions";
+import { createUsersTable, createUser, updateUser } from "../../actions";
+
+import Query from "./Query";
 
 export const resolvers = {
-  Query: {
-    getUsers: (obj, args, context, info) => {
-      return scanUsers();
-    }
-  },
+  Query,
   Mutation: {
     createUsersTable: () => {
       return createUsersTable();
