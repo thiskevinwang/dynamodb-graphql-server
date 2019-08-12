@@ -1,32 +1,7 @@
-import { createUsersTable, createUser, updateUser, scanUsers } from "./actions";
-import { ApolloServer, gql } from "apollo-server";
-import { typeDefs } from "./src/schema.graphql";
+import { ApolloServer } from "apollo-server";
 
-// Resolvers define the technique for fetching the types in the
-// schema.  We'll retrieve books from the "books" array above.
-const resolvers = {
-  Query: {
-    getUsers: (obj, args, context, info) => {
-      return scanUsers();
-    }
-  },
-  Mutation: {
-    createUsersTable: () => {
-      return createUsersTable();
-    },
-    createUser: (obj, args, context, info) => {
-      console.log("args", args);
-      return createUser({ username: args.username, id: args.id });
-    },
-    rateUser: (obj, args, context, info) => {
-      return updateUser({
-        username: args.username,
-        id: args.id,
-        rating: args.rating
-      });
-    }
-  }
-};
+import { typeDefs } from "./src/schema.graphql";
+import { resolvers } from "./src/resolvers";
 
 // In the most basic sense, the ApolloServer can be started
 // by passing type definitions (typeDefs) and the resolvers
