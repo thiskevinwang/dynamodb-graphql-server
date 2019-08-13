@@ -1,4 +1,4 @@
-import { USERS } from "../../actions";
+const USERS = "Users";
 
 const getUsers = async (obj, args, context, info) => {
   const table = USERS;
