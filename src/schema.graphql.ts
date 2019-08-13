@@ -3,8 +3,8 @@ import { gql } from "apollo-server";
 export const typeDefs = gql`
   type Attributes {
     rating: Float
-    created_on: Int
-    updated_on: Int
+    created_at: Int
+    updated_at: Int
   }
 
   type Item {

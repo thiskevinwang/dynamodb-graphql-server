@@ -35,15 +35,15 @@ const createUsersTable = async (obj, args, context, info) => {
 const createUser = async (obj, args, context, info) => {
   const { id, username } = args;
   const { docClient } = context;
-  const created_on = Date.now();
+  const created_at = Date.now();
   const params = {
     TableName: USERS,
     Item: {
       id: id,
       username: username,
       attributes: {
-        created_on,
-        updated_on: null
+        created_at,
+        updated_at: null
       }
     }
   };
@@ -74,7 +74,7 @@ const rateUser = async (obj, args, context, info) => {
       id,
       username
     },
-    UpdateExpression: "set attributes.rating = :r, attributes.updated_on= :u",
+    UpdateExpression: "set attributes.rating = :r, attributes.updated_at= :u",
     ExpressionAttributeValues: {
       ":r": rating,
       ":u": Date.now()
