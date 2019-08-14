@@ -1,24 +1,24 @@
 import { gql } from "apollo-server";
 
 export const typeDefs = gql`
+  scalar Date
+
   type Attributes {
     rating: Float
+    created_at: Date
+    updated_at: Date
   }
 
-  type Item {
+  type User {
     id: Int
     username: String
     attributes: Attributes
   }
 
-  type User {
-    Item: Item
-  }
-
   type Users {
     Count: Int
     ScannedCount: Int
-    Items: [Item]
+    Users: [User]
   }
 
   type BillingModeSummary {
@@ -61,13 +61,13 @@ export const typeDefs = gql`
     TableDescription: TableDescription
   }
   type Query {
-    user(title: String!): User
     getUsers: Users
+    getUser(username: String!, id: Int): User
   }
 
   type Mutation {
     createUsersTable: Table
     createUser(username: String!, id: Int!): User
-    rateUser(username: String!, id: Int!, rating: Float!): User
+    rateUser(username: String!, id: Int!, rating: Float!): Attributes
   }
 `;
