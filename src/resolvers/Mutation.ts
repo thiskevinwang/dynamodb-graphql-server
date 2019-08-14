@@ -47,6 +47,10 @@ const createUser = async (obj, args, context, info) => {
       }
     }
   };
+
+  /**
+   * docClient.put doesn't return anything
+   */
   return docClient
     .put(params, (err, data) => {
       if (err) {
@@ -60,8 +64,9 @@ const createUser = async (obj, args, context, info) => {
       }
     })
     .promise()
-    .then(result => {
-      return result;
+    .then(res => {
+      console.log(res);
+      return res;
     });
 };
 
@@ -95,7 +100,14 @@ const rateUser = async (obj, args, context, info) => {
     .promise()
     .then(res => {
       console.log("res", res);
-      return res;
+      // Attributes: {
+      //   attributes: {
+      //     updated_on: 1565660914995,
+      //     rating: 4.4,
+      //     created_on: 1565660661720
+      //   }
+      // }
+      return res.Attributes.attributes;
     });
 };
 
