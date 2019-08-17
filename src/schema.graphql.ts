@@ -3,6 +3,10 @@ import { gql } from "apollo-server";
 export const typeDefs = gql`
   scalar Date
 
+  type Subscription {
+    userAdded: User
+  }
+
   type Attributes {
     rating: Float
     created_at: Date
