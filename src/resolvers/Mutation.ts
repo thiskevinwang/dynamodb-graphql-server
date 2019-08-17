@@ -75,6 +75,8 @@ const createUser = async (obj, args, context, info) => {
 const rateUser = async (obj, args, context, info) => {
   const { id, username, rating } = args;
   const { docClient, pubsub } = context;
+
+  const now = Date.now();
   const params = {
     TableName: USERS,
     Key: {
@@ -84,12 +86,10 @@ const rateUser = async (obj, args, context, info) => {
     UpdateExpression: "set attributes.rating = :r, attributes.updated_at= :u",
     ExpressionAttributeValues: {
       ":r": rating,
-      ":u": Date.now()
+      ":u": now
     },
     ReturnValues: "UPDATED_NEW"
   };
-
-  pubsub.publish(USER_UPDATED, { userAdded: args });
 
   return docClient
     .update(params, function(err, data) {
@@ -112,6 +112,14 @@ const rateUser = async (obj, args, context, info) => {
       //     created_on: 1565660661720
       //   }
       // }
+
+      pubsub.publish(USER_UPDATED, {
+        userUpdated: {
+          id: args.id,
+          username: args.username,
+          attributes: res.Attributes.attributes
+        }
+      });
       return res.Attributes.attributes;
     });
 };

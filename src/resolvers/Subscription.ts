@@ -7,5 +7,11 @@ const userAdded = {
     return pubsub.asyncIterator([USER_ADDED]);
   }
 };
+const userUpdated = {
+  subscribe: (obj, args, context, info) => {
+    const { pubsub } = context;
+    return pubsub.asyncIterator([USER_UPDATED]);
+  }
+};
 
-export default { userAdded };
+export default { userAdded, userUpdated };

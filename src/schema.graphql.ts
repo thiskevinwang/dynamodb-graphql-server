@@ -5,6 +5,7 @@ export const typeDefs = gql`
 
   type Subscription {
     userAdded: User
+    userUpdated: User
   }
 
   type Attributes {
