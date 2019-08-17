@@ -1,4 +1,4 @@
-const USERS = "Users";
+import { USERS, USER_ADDED, USER_UPDATED } from "./index";
 
 const getUser = async (obj, args, context, info) => {
   const { username, id }: { username: string; id: number } = args;

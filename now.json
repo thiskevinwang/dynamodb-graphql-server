@@ -6,6 +6,7 @@
       "use": "@now/node-server"
     }
   ],
+  "routes": [{ "src": "/graphql", "dest": "index.ts" }],
   "build": {
     "env": {
       "MY_AWS_ACCESS_KEY_ID": "@my_aws_access_key_id",
