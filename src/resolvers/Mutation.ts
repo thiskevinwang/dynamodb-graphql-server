@@ -1,4 +1,5 @@
 const USERS = "Users";
+const USER_ADDED = "USER_ADDED";
 
 const createUsersTable = async (obj, args, context, info) => {
   const { dynamodb } = context;
@@ -34,7 +35,7 @@ const createUsersTable = async (obj, args, context, info) => {
 
 const createUser = async (obj, args, context, info) => {
   const { id, username } = args;
-  const { docClient } = context;
+  const { docClient, pubsub } = context;
   const created_at = Date.now();
   const params = {
     TableName: USERS,
@@ -47,6 +48,8 @@ const createUser = async (obj, args, context, info) => {
       }
     }
   };
+
+  pubsub.publish(USER_ADDED, { userAdded: args });
 
   /**
    * docClient.put doesn't return anything
