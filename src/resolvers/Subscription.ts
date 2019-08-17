@@ -1,4 +1,4 @@
-const USER_ADDED = "USER_ADDED";
+import { USERS, USER_ADDED, USER_UPDATED } from "./index";
 
 const userAdded = {
   // Additional event labels can be passed to asyncIterator creation
