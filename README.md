@@ -1,6 +1,17 @@
 # graphql-server-example
 
-- https://graphql-server-example.thekevinwang.now.sh/
+## Getting Started
+
+```bash
+git clone https://github.com/thiskevinwang/graphql-server-example.git
+cd graphql-server-example
+yarn install
+yarn run develop
+
+# go to localhost:4000
+```
+
+---
 
 ## Education sources
 
