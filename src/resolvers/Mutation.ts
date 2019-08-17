@@ -1,5 +1,4 @@
-const USERS = "Users";
-const USER_ADDED = "USER_ADDED";
+import { USERS, USER_ADDED, USER_UPDATED } from "./index";
 
 const createUsersTable = async (obj, args, context, info) => {
   const { dynamodb } = context;
@@ -75,7 +74,7 @@ const createUser = async (obj, args, context, info) => {
 
 const rateUser = async (obj, args, context, info) => {
   const { id, username, rating } = args;
-  const { docClient } = context;
+  const { docClient, pubsub } = context;
   const params = {
     TableName: USERS,
     Key: {
@@ -89,6 +88,9 @@ const rateUser = async (obj, args, context, info) => {
     },
     ReturnValues: "UPDATED_NEW"
   };
+
+  pubsub.publish(USER_UPDATED, { userAdded: args });
+
   return docClient
     .update(params, function(err, data) {
       if (err) {
