@@ -1,17 +1,17 @@
-import { USERS, USER_ADDED, USER_UPDATED } from "./index";
+import { PAGES, USER_ADDED, USER_UPDATED } from "./index";
 
-const createUsersTable = async (obj, args, context, info) => {
+const createPagesTable = async (obj, args, context, info) => {
   const { dynamodb } = context;
 
   const params = {
-    TableName: USERS,
+    TableName: PAGES,
     KeySchema: [
       { AttributeName: "id", KeyType: "HASH" },
-      { AttributeName: "username", KeyType: "RANGE" }
+      { AttributeName: "location", KeyType: "RANGE" }
     ],
     AttributeDefinitions: [
       { AttributeName: "id", AttributeType: "N" },
-      { AttributeName: "username", AttributeType: "S" }
+      { AttributeName: "location", AttributeType: "S" }
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
@@ -32,23 +32,25 @@ const createUsersTable = async (obj, args, context, info) => {
   });
 };
 
-const createUser = async (obj, args, context, info) => {
-  const { id, username } = args;
+const createPage = async (obj, args, context, info) => {
+  const { id, location } = args;
   const { docClient, pubsub } = context;
   const created_at = Date.now();
   const params = {
-    TableName: USERS,
+    TableName: PAGES,
     Item: {
       id: id,
-      username: username,
+      location: location,
       attributes: {
+        views: 1,
+        visits: 0,
         created_at,
         updated_at: null
       }
     }
   };
 
-  pubsub.publish(USER_ADDED, { userAdded: args });
+  // pubsub.publish(USER_ADDED, { userAdded: args });
 
   /**
    * docClient.put doesn't return anything
@@ -72,56 +74,40 @@ const createUser = async (obj, args, context, info) => {
     });
 };
 
-const rateUser = async (obj, args, context, info) => {
-  const { id, username, rating } = args;
-  const { docClient, pubsub } = context;
+const incrementViews = async (obj, args, context, info) => {
+  const { id, location } = args;
+  const { docClient } = context;
 
   const now = Date.now();
   const params = {
-    TableName: USERS,
+    TableName: PAGES,
     Key: {
       id,
-      username
+      location
     },
-    UpdateExpression: "set attributes.rating = :r, attributes.updated_at= :u",
+    UpdateExpression:
+      "set attributes.visits= attributes.visits + :v, attributes.updated_at= :u",
     ExpressionAttributeValues: {
-      ":r": rating,
+      ":v": 1,
       ":u": now
     },
     ReturnValues: "UPDATED_NEW"
   };
 
+  /**
+   * In order to get a return value from `docClient`, you need to call
+   * docClient.update(params).promise.
+   *
+   * But if you specify a callback too - docClient.update(params, (err,data) => {...}).promise()
+   * This gets evaluated TWICE.
+   */
   return docClient
-    .update(params, function(err, data) {
-      if (err) {
-        console.error(
-          "Unable to update item. Error JSON:",
-          JSON.stringify(err, null, 2)
-        );
-      } else {
-        console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-      }
-    })
+    .update(params)
     .promise()
     .then(res => {
       console.log("res", res);
-      // Attributes: {
-      //   attributes: {
-      //     updated_on: 1565660914995,
-      //     rating: 4.4,
-      //     created_on: 1565660661720
-      //   }
-      // }
-
-      pubsub.publish(USER_UPDATED, {
-        userUpdated: {
-          id: args.id,
-          username: args.username,
-          attributes: res.Attributes.attributes
-        }
-      });
       return res.Attributes.attributes;
     });
 };
 
-export default { createUsersTable, createUser, rateUser };
+export default { createPagesTable, createPage, incrementViews };

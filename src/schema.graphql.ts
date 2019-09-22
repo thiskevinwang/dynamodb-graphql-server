@@ -9,7 +9,8 @@ export const typeDefs = gql`
   }
 
   type Attributes {
-    rating: Float
+    views: Int
+    visits: Int
     created_at: Date
     updated_at: Date
   }
@@ -24,6 +25,20 @@ export const typeDefs = gql`
     Count: Int
     ScannedCount: Int
     Users: [User]
+  }
+  type Page {
+    id: Int
+    location: String
+    attributes: Attributes
+  }
+
+  """
+  Weird DynamoDB response structure...
+  """
+  type Pages {
+    Count: Int
+    ScannedCount: Int
+    Pages: [Page]
   }
 
   type BillingModeSummary {
@@ -66,13 +81,13 @@ export const typeDefs = gql`
     TableDescription: TableDescription
   }
   type Query {
-    getUsers: Users
-    getUser(username: String!, id: Int): User
+    getPages: Pages
+    getPage(location: String!, id: Int): Page
   }
 
   type Mutation {
-    createUsersTable: Table
-    createUser(username: String!, id: Int!): User
-    rateUser(username: String!, id: Int!, rating: Float!): Attributes
+    createPagesTable: Table
+    createPage(location: String!, id: Int): Page
+    incrementViews(location: String!, id: Int): Attributes
   }
 `;

@@ -1,48 +1,47 @@
-import { USERS, USER_ADDED, USER_UPDATED } from "./index";
+import { PAGES, USER_ADDED, USER_UPDATED } from "./index";
 
-const getUser = async (obj, args, context, info) => {
-  const { username, id }: { username: string; id: number } = args;
+const getPage = async (obj, args, context, info) => {
+  const { id, location } = args;
   const { docClient } = context;
   const params = {
-    TableName: USERS,
+    TableName: PAGES,
     Key: {
       id: id,
-      username: username
+      location: location
     }
   };
+  /**
+   * In order to get a return value from `docClient`, you need to call
+   * docClient.get(params).promise.
+   *
+   * But if you specify a callback too - docClient.get(params, (err,data) => {...}).promise()
+   * This gets evaluated TWICE.
+   */
   return docClient
-    .get(params, function(err, data) {
-      if (err) {
-        console.error(
-          "Unable to get item. Error JSON:",
-          JSON.stringify(err, null, 2)
-        );
-      } else {
-        // console.log("getItem succeeded:", JSON.stringify(data, null, 2));
-      }
-    })
+    .get(
+      params
+      // Don't use this callback
+      // function(err, data) {
+      //   if (err) {
+      //     console.error(
+      //       "Unable to get item. Error JSON:",
+      //       JSON.stringify(err, null, 2)
+      //     );
+      //   } else {
+      //     console.log("getItem succeeded:", JSON.stringify(data, null, 2));
+      //   }
+      // }
+    )
     .promise()
     .then(res => {
       console.log(res);
-      /**
-       * TO AVOID THIS, YOU CAN DO
-       */
-      // const { Item } = res;
-      // return {
-      //   attributes: Item.attributes },
-      //   id: Item.id,
-      //   username: Item.username
-      // };
-      /**
-       * THIS
-       */
-      const { Item: User } = res;
-      return User;
+      const { Item } = res;
+      return Item;
     });
 };
 
-const getUsers = async (obj, args, context, info) => {
-  const table = USERS;
+const getPages = async (obj, args, context, info) => {
+  const table = PAGES;
   const { docClient } = context;
 
   const params = {
@@ -62,23 +61,27 @@ const getUsers = async (obj, args, context, info) => {
 
   console.log("Scanning for items...");
   return docClient
-    .scan(params, function(err, data) {
-      if (err) {
-        console.error(
-          "Unable to update item. Error JSON:",
-          JSON.stringify(err, null, 2)
-        );
-      } else {
-        // console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
-      }
-    })
+    .scan(
+      params
+      // 🚫
+      // function(err, data) {
+      //   if (err) {
+      //     console.error(
+      //       "Unable to update item. Error JSON:",
+      //       JSON.stringify(err, null, 2)
+      //     );
+      //   } else {
+      //     console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+      //   }
+      // }
+    )
     .promise()
     .then(result => {
       console.log("result", result);
       const { Items, Count, ScannedCount } = result;
       // Restructure the dynamodb response for better graphql handling
-      return { Users: Items, Count, ScannedCount };
+      return { Pages: Items, Count, ScannedCount };
     });
 };
 
-export default { getUser, getUsers };
+export default { getPage, getPages };
