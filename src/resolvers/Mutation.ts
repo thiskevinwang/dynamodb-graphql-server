@@ -6,8 +6,8 @@ const createPagesTable = async (obj, args, context, info) => {
   const params = {
     TableName: PAGES,
     KeySchema: [
-      { AttributeName: "id", KeyType: "HASH" },
-      { AttributeName: "location", KeyType: "RANGE" }
+      { AttributeName: "id", KeyType: "HASH" }, // partition key
+      { AttributeName: "location", KeyType: "RANGE" } // sort key
     ],
     AttributeDefinitions: [
       { AttributeName: "id", AttributeType: "N" },
@@ -19,23 +19,24 @@ const createPagesTable = async (obj, args, context, info) => {
     }
   };
 
-  dynamodb.createTable(params, (err, data) => {
-    if (err) {
-      console.error(
-        "Unable to create table: " + "\n" + JSON.stringify(err, undefined, 2)
-      );
-    } else {
-      console.log(
-        "Created table: " + "\n" + JSON.stringify(data, undefined, 2)
-      );
-    }
-  });
+  return dynamodb
+    .createTable(params)
+    .promise()
+    .then((res, rej) => {
+      if (res) console.log("resolved:", res);
+      if (rej) console.log("rejected:", rej);
+    });
 };
 
 const createPage = async (obj, args, context, info) => {
   const { id, location } = args;
-  const { docClient, pubsub } = context;
+  const { docClient } = context;
   const created_at = Date.now();
+
+  /**
+   * preventing overwrite
+   * @see https://stackoverflow.com/a/46531548/9823455
+   */
   const params = {
     TableName: PAGES,
     Item: {
@@ -43,37 +44,55 @@ const createPage = async (obj, args, context, info) => {
       location: location,
       attributes: {
         views: 1,
-        visits: 0,
         created_at,
         updated_at: null
       }
+    },
+    /**
+     * ConditionExpression
+     * @see https://stackoverflow.com/a/46531548/9823455
+     * @type {String}
+     * - A condition that must be satisfied in order for a conditional PutItem operation to succeed.
+     *   - True => put succeeds
+     *
+     * An expression can contain any of the following:
+     *
+     * Functions: attribute_exists | attribute_not_exists | attribute_type | contains | begins_with | size
+     * These function names are case-sensitive.
+     *
+     * Comparison operators: ` = | <> | < | > | <= | >= | BETWEEN | IN `
+     * Logical operators: ` AND | OR | NOT`
+     *
+     * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html
+     * */
+    ConditionExpression: "#location <> :location", // put succeed if # !== :
+    /**
+     * use this to avoid the error:
+     * _"Invalid ConditionExpression: Attribute name is a reserved keyword;_
+     */
+    ExpressionAttributeNames: {
+      "#location": "location" // set # === Item.location
+    },
+    ExpressionAttributeValues: {
+      ":location": location // set : === location
     }
+    /** ` NONE | ALL_OLD | UPDATED_OLD | ALL_NEW | UPDATED_NEW ` */
+    // ReturnValues: "UPDATED_OLD"
   };
 
-  // pubsub.publish(USER_ADDED, { userAdded: args });
-
   /**
-   * docClient.put doesn't return anything
+   * docClient.put() doesn't return anything
    */
-  return docClient
-    .put(params, (err, data) => {
-      if (err) {
-        console.error(
-          "Unable to add item: " + "\n" + JSON.stringify(err, undefined, 2)
-        );
-      } else {
-        console.log(
-          "PutItem succeeded: " + "\n" + JSON.stringify(data, undefined, 2)
-        );
-      }
-    })
-    .promise()
-    .then(res => {
-      console.log(res);
-      return res;
-    });
+  return docClient.put(params, function(err, data) {
+    if (err) console.log(err);
+    else console.log(data);
+  });
 };
 
+/**
+ * Increment an atomic counter
+ * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.NodeJs.03.html#GettingStarted.NodeJs.03.04
+ */
 const incrementViews = async (obj, args, context, info) => {
   const { id, location } = args;
   const { docClient } = context;
@@ -86,7 +105,10 @@ const incrementViews = async (obj, args, context, info) => {
       location
     },
     UpdateExpression:
-      "set attributes.visits= attributes.visits + :v, attributes.updated_at= :u",
+      "set attributes.#views = attributes.#views + :v, attributes.updated_at = :u",
+    ExpressionAttributeNames: {
+      "#views": "views"
+    },
     ExpressionAttributeValues: {
       ":v": 1,
       ":u": now
