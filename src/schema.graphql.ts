@@ -10,7 +10,6 @@ export const typeDefs = gql`
 
   type Attributes {
     views: Int
-    visits: Int
     created_at: Date
     updated_at: Date
   }
