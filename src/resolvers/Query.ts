@@ -1,8 +1,14 @@
+import chalk from "chalk";
+
 import { PAGES, USER_ADDED, USER_UPDATED } from "./index";
+
+const green = chalk.underline.greenBright;
 
 const getPage = async (obj, args, context, info) => {
   const { id, location } = args;
   const { docClient } = context;
+  const { fieldName, parentType } = info;
+
   const params = {
     TableName: PAGES,
     Key: {
@@ -34,7 +40,11 @@ const getPage = async (obj, args, context, info) => {
     )
     .promise()
     .then(res => {
+      console.group(green(`${chalk.bold(parentType)}: ${fieldName}`));
+      console.log(chalk.grey(location));
       console.log(res);
+      console.log("\n");
+      console.groupEnd();
       const { Item } = res;
       return Item;
     });
@@ -43,6 +53,7 @@ const getPage = async (obj, args, context, info) => {
 const getPages = async (obj, args, context, info) => {
   const table = PAGES;
   const { docClient } = context;
+  const { fieldName, parentType } = info;
 
   const params = {
     TableName: table
@@ -76,9 +87,12 @@ const getPages = async (obj, args, context, info) => {
       // }
     )
     .promise()
-    .then(result => {
-      console.log("result", result);
-      const { Items, Count, ScannedCount } = result;
+    .then(res => {
+      console.group(green(`${chalk.bold(parentType)}: ${fieldName}`));
+      console.log(res);
+      console.log("\n");
+      console.groupEnd();
+      const { Items, Count, ScannedCount } = res;
       // Restructure the dynamodb response for better graphql handling
       return { Pages: Items, Count, ScannedCount };
     });

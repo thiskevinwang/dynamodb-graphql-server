@@ -1,7 +1,12 @@
+import chalk from "chalk";
+
 import { PAGES, USER_ADDED, USER_UPDATED } from "./index";
+
+const yellow = chalk.underline.yellowBright;
 
 const createPagesTable = async (obj, args, context, info) => {
   const { dynamodb } = context;
+  const { fieldName, parentType } = info;
 
   const params = {
     TableName: PAGES,
@@ -31,6 +36,8 @@ const createPagesTable = async (obj, args, context, info) => {
 const createPage = async (obj, args, context, info) => {
   const { id, location } = args;
   const { docClient } = context;
+  const { fieldName, parentType } = info;
+
   const created_at = Date.now();
 
   /**
@@ -84,8 +91,16 @@ const createPage = async (obj, args, context, info) => {
    * docClient.put() doesn't return anything
    */
   return docClient.put(params, function(err, data) {
-    if (err) console.log(err);
-    else console.log(data);
+    console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`));
+    console.log(chalk.grey(location));
+
+    if (err) {
+      console.error(chalk.red(err));
+    } else {
+      console.log(data);
+    }
+    console.log("\n");
+    console.groupEnd();
   });
 };
 
@@ -94,8 +109,13 @@ const createPage = async (obj, args, context, info) => {
  * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.NodeJs.03.html#GettingStarted.NodeJs.03.04
  */
 const incrementViews = async (obj, args, context, info) => {
+  // console.log("info", info);
   const { id, location } = args;
   const { docClient } = context;
+  const {
+    fieldName, // 'incrementViews'
+    parentType // Mutation
+  } = info;
 
   const now = Date.now();
   const params = {
@@ -127,7 +147,11 @@ const incrementViews = async (obj, args, context, info) => {
     .update(params)
     .promise()
     .then(res => {
-      console.log("res", res);
+      console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`));
+      console.log(chalk.grey(location));
+      console.log(res);
+      console.log("\n");
+      console.groupEnd();
       return res.Attributes.attributes;
     });
 };

@@ -45,4 +45,5 @@ const server = new ApolloServer({
 server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`🚀 Server ready at ${highlight(url)}`);
   console.log(`🚀 Subscriptions ready at ${highlight(subscriptionsUrl)}`);
+  console.log("\n");
 });
