@@ -40,6 +40,21 @@ export const typeDefs = gql`
     Pages: [Page]
   }
 
+  type Ip {
+    id: Int
+    ipAddress: String
+    # TODO: idea
+    # visits: [Date]
+  }
+  """
+  Weird DynamoDB response structure...
+  """
+  type Ips {
+    Count: Int
+    ScannedCount: Int
+    Ips: [Ip]
+  }
+
   type BillingModeSummary {
     BillingMode: String
     LastUpdateToPayPerRequestDateTime: String
@@ -82,11 +97,14 @@ export const typeDefs = gql`
   type Query {
     getPages: Pages
     getPage(location: String!, id: Int): Page
+    getIps: Ips
   }
 
   type Mutation {
     createPagesTable: Table
     createPage(location: String!, id: Int): Page
     incrementViews(location: String!, id: Int): Attributes
+    trackIp: String
+    createIpsTable: Table
   }
 `;
