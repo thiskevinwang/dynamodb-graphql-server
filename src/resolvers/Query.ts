@@ -142,7 +142,9 @@ const getIps = async (obj, args, context, info) => {
       console.groupEnd();
       const { Items, Count, ScannedCount } = res;
       // Restructure the dynamodb response for better graphql handling
-      return { Ips: Items, Count, ScannedCount };
+      console.log(Items);
+      // return { Ips: Items, Count, ScannedCount };
+      return Items;
     });
 };
 

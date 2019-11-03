@@ -44,7 +44,7 @@ export const typeDefs = gql`
     id: Int
     ipAddress: String
     # TODO: idea
-    # visits: [Date]
+    visits: [Date]
   }
   """
   Weird DynamoDB response structure...
@@ -95,9 +95,10 @@ export const typeDefs = gql`
     TableDescription: TableDescription
   }
   type Query {
+    # TODO: remove Pages type, and copy how Ips are handled.
     getPages: Pages
     getPage(location: String!, id: Int): Page
-    getIps: Ips
+    getIps: [Ip]
   }
 
   type Mutation {
@@ -105,6 +106,7 @@ export const typeDefs = gql`
     createPage(location: String!, id: Int): Page
     incrementViews(location: String!, id: Int): Attributes
     trackIp: String
+    trackIpVisits: String
     createIpsTable: Table
   }
 `;
