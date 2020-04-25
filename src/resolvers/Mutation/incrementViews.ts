@@ -49,7 +49,7 @@ export const incrementViews: ResolverFn = async (obj, args, context, info) => {
     .update(params)
     .promise()
     .then(res => {
-      console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`))
+      console.group(yellow(`${chalk.bold(parentType.name)}: ${fieldName}`))
       console.log(chalk.grey(location))
       console.log(res)
       console.log("\n")

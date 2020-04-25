@@ -43,7 +43,7 @@ export const getPage: ResolverFn = async (obj, args, context, info) => {
     )
     .promise()
     .then(res => {
-      console.group(green(`${chalk.bold(parentType)}: ${fieldName}`))
+      console.group(green(`${chalk.bold(parentType.name)}: ${fieldName}`))
       console.log(chalk.grey(location))
       console.log(res)
       console.log("\n")

@@ -20,7 +20,7 @@ export const getPages: ResolverFn = async (obj, args, context, info) => {
     .scan(params)
     .promise()
     .then(res => {
-      console.group(green(`${chalk.bold(parentType)}: ${fieldName}`))
+      console.group(green(`${chalk.bold(parentType.name)}: ${fieldName}`))
       console.log(res)
       console.log("\n")
       console.groupEnd()

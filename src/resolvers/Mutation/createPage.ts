@@ -65,7 +65,7 @@ export const createPage: ResolverFn = async (obj, args, context, info) => {
    * docClient.put() doesn't return anything
    */
   return docClient.put(params, function (err, data) {
-    console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`))
+    console.group(yellow(`${chalk.bold(parentType.name)}: ${fieldName}`))
     console.log(chalk.grey(location))
 
     if (err) {

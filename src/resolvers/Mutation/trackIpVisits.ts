@@ -54,7 +54,7 @@ export const trackIpVisits: ResolverFn = async (obj, args, context, info) => {
   }
 
   const value = docClient.update(params, (err, data) => {
-    console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`))
+    console.group(yellow(`${chalk.bold(parentType.name)}: ${fieldName}`))
     console.log(chalk.grey(ipAddress))
     if (err) {
       console.error(chalk.red(err.message))
