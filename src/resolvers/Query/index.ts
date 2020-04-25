@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-import { PAGES, USER_ADDED, USER_UPDATED, IPS } from "./index";
+import { PAGES, USER_ADDED, USER_UPDATED, IPS } from "../index";
 
 const green = chalk.underline.greenBright;
 
@@ -13,8 +13,8 @@ const getPage = async (obj, args, context, info) => {
     TableName: PAGES,
     Key: {
       id: id,
-      location: location
-    }
+      location: location,
+    },
   };
   /**
    * In order to get a return value from `docClient`, you need to call
@@ -39,7 +39,7 @@ const getPage = async (obj, args, context, info) => {
       // }
     )
     .promise()
-    .then(res => {
+    .then((res) => {
       console.group(green(`${chalk.bold(parentType)}: ${fieldName}`));
       console.log(chalk.grey(location));
       console.log(res);
@@ -56,7 +56,7 @@ const getPages = async (obj, args, context, info) => {
   const { fieldName, parentType } = info;
 
   const params = {
-    TableName: table
+    TableName: table,
     // Key: {
     //   year: year,
     //   title: title
@@ -87,7 +87,7 @@ const getPages = async (obj, args, context, info) => {
       // }
     )
     .promise()
-    .then(res => {
+    .then((res) => {
       console.group(green(`${chalk.bold(parentType)}: ${fieldName}`));
       console.log(res);
       console.log("\n");
@@ -104,7 +104,7 @@ const getIps = async (obj, args, context, info) => {
   const { fieldName, parentType } = info;
 
   const params = {
-    TableName: table
+    TableName: table,
     // Key: {
     //   year: year,
     //   title: title
@@ -135,7 +135,7 @@ const getIps = async (obj, args, context, info) => {
       // }
     )
     .promise()
-    .then(res => {
+    .then((res) => {
       console.group(green(`${chalk.bold(parentType)}: ${fieldName}`));
       console.log(res);
       console.log("\n");

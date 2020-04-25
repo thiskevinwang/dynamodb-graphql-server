@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-import { IPS, PAGES, USER_ADDED, USER_UPDATED } from "./index";
+import { IPS, PAGES, USER_ADDED, USER_UPDATED } from "../index";
 
 const yellow = chalk.underline.yellowBright;
 
@@ -12,16 +12,16 @@ const createPagesTable = async (obj, args, context, info) => {
     TableName: PAGES,
     KeySchema: [
       { AttributeName: "id", KeyType: "HASH" }, // partition key
-      { AttributeName: "location", KeyType: "RANGE" } // sort key
+      { AttributeName: "location", KeyType: "RANGE" }, // sort key
     ],
     AttributeDefinitions: [
       { AttributeName: "id", AttributeType: "N" },
-      { AttributeName: "location", AttributeType: "S" }
+      { AttributeName: "location", AttributeType: "S" },
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
-      WriteCapacityUnits: 5
-    }
+      WriteCapacityUnits: 5,
+    },
   };
 
   return dynamodb
@@ -52,8 +52,8 @@ const createPage = async (obj, args, context, info) => {
       attributes: {
         views: 1,
         created_at,
-        updated_at: null
-      }
+        updated_at: null,
+      },
     },
     /**
      * ConditionExpression
@@ -78,11 +78,11 @@ const createPage = async (obj, args, context, info) => {
      * _"Invalid ConditionExpression: Attribute name is a reserved keyword;_
      */
     ExpressionAttributeNames: {
-      "#location": "location" // set # === Item.location
+      "#location": "location", // set # === Item.location
     },
     ExpressionAttributeValues: {
-      ":location": location // set : === location
-    }
+      ":location": location, // set : === location
+    },
     /** ` NONE | ALL_OLD | UPDATED_OLD | ALL_NEW | UPDATED_NEW ` */
     // ReturnValues: "UPDATED_OLD"
   };
@@ -90,7 +90,7 @@ const createPage = async (obj, args, context, info) => {
   /**
    * docClient.put() doesn't return anything
    */
-  return docClient.put(params, function(err, data) {
+  return docClient.put(params, function (err, data) {
     console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`));
     console.log(chalk.grey(location));
 
@@ -113,7 +113,7 @@ const incrementViews = async (obj, args, context, info) => {
   const { docClient } = context;
   const {
     fieldName, // 'incrementViews'
-    parentType // Mutation
+    parentType, // Mutation
   } = info;
 
   const now = Date.now();
@@ -121,18 +121,18 @@ const incrementViews = async (obj, args, context, info) => {
     TableName: PAGES,
     Key: {
       id,
-      location
+      location,
     },
     UpdateExpression:
       "set attributes.#views = attributes.#views + :v, attributes.updated_at = :u",
     ExpressionAttributeNames: {
-      "#views": "views"
+      "#views": "views",
     },
     ExpressionAttributeValues: {
       ":v": 1,
-      ":u": now
+      ":u": now,
     },
-    ReturnValues: "UPDATED_NEW"
+    ReturnValues: "UPDATED_NEW",
   };
 
   /**
@@ -145,7 +145,7 @@ const incrementViews = async (obj, args, context, info) => {
   return docClient
     .update(params)
     .promise()
-    .then(res => {
+    .then((res) => {
       console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`));
       console.log(chalk.grey(location));
       console.log(res);
@@ -162,16 +162,16 @@ const createIpsTable = async (obj, args, context, info) => {
     TableName: IPS,
     KeySchema: [
       { AttributeName: "id", KeyType: "HASH" }, // partition key
-      { AttributeName: "ipAddress", KeyType: "RANGE" } // sort key
+      { AttributeName: "ipAddress", KeyType: "RANGE" }, // sort key
     ],
     AttributeDefinitions: [
       { AttributeName: "id", AttributeType: "N" },
-      { AttributeName: "ipAddress", AttributeType: "S" }
+      { AttributeName: "ipAddress", AttributeType: "S" },
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
-      WriteCapacityUnits: 5
-    }
+      WriteCapacityUnits: 5,
+    },
   };
 
   return dynamodb
@@ -233,7 +233,7 @@ const trackIpVisits = async (obj, args, context, info) => {
   const { docClient } = context;
   const {
     fieldName,
-    parentType // Mutation
+    parentType, // Mutation
   } = info;
   /**
    * # ipAddress
@@ -249,7 +249,7 @@ const trackIpVisits = async (obj, args, context, info) => {
     TableName: IPS,
     Key: {
       id: 1,
-      ipAddress
+      ipAddress,
     },
     // Item: {
     //   id: 1,
@@ -264,16 +264,16 @@ const trackIpVisits = async (obj, args, context, info) => {
     UpdateExpression:
       "set #visits = list_append(if_not_exists(#visits, :empty_list), :now)",
     ExpressionAttributeNames: {
-      "#visits": "visits"
+      "#visits": "visits",
     },
     ExpressionAttributeValues: {
       ":now": [now],
-      ":empty_list": []
-    }
+      ":empty_list": [],
+    },
     // ReturnValues: "UPDATED_NEW"
   };
 
-  const value = docClient.update(params, function(err, data) {
+  const value = docClient.update(params, function (err, data) {
     console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`));
     console.log(chalk.grey(ipAddress));
     if (err) {
@@ -294,5 +294,5 @@ export default {
   createPage,
   incrementViews,
   // trackIp,
-  trackIpVisits
+  trackIpVisits,
 };
