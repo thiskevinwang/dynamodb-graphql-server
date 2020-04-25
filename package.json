@@ -7,7 +7,9 @@
     "start": "nodemon index.ts",
     "start:db": "docker run -p 8000:8000 amazon/dynamodb-local",
     "develop": "yarn start & yarn start:db",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write src/**/*.ts",
+    "lint": "tslint -p tsconfig.json"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +28,8 @@
     "@types/graphql": "^14.5.0",
     "@types/node": "^13.13.2",
     "prettier": "^2.0.5",
+    "tslint": "^6.1.1",
+    "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.9.0-dev.20200425"
   }
 }
