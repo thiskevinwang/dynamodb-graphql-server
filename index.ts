@@ -6,17 +6,6 @@ import { resolvers } from "./src/resolvers";
 import { AWS, dynamodb, docClient } from "./src/context/aws";
 
 const highlight = chalk.bold.underline.blueBright;
-const name = "Kevin";
-
-console.log(chalk`
-  👋 I'm {bold ${name}}.
-  This is a serverless server, built with
-  - {hex('#3F20BA') Apollo}
-  - {white.bgHex('#000000') Zeit Now}
-  - {hex('#CC6600') AWS DynamoDb}
-  - {white.bgHex('#007ACC') TypeScript}
-  - {hex('#E10098') GraphQL}
-`);
 
 // For subscriptions to work, the same single instance of
 // PubSub should be in the ApolloServer context object
@@ -31,13 +20,13 @@ const server = new ApolloServer({
   introspection: true,
   // Apollo Server 2 ships with GraphQL Playground instead of GraphiQL
   playground: true,
-  context: request => ({
+  context: (request) => ({
     ...request,
     AWS,
     dynamodb,
     docClient,
-    pubsub
-  })
+    pubsub,
+  }),
 });
 
 // This `listen` method launches a web-server.  Existing apps
@@ -45,5 +34,4 @@ const server = new ApolloServer({
 server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`🚀 Server ready at ${highlight(url)}`);
   console.log(`🚀 Subscriptions ready at ${highlight(subscriptionsUrl)}`);
-  console.log("\n");
 });
