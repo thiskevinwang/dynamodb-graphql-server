@@ -23,27 +23,32 @@ AWS.config.update(
       }
 )
 
+const options:
+  | AWS.DynamoDB.ClientConfiguration
+  | AWS.DynamoDB.DocumentClient.DocumentClientOptions = isEnvProduction
+  ? {
+      apiVersion: "2012-08-10",
+      region: "us-east-1",
+      endpoint: "https://dynamodb.us-east-1.amazonaws.com",
+      accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+    }
+  : {
+      apiVersion: "2012-08-10",
+      region: "localhost",
+      endpoint: "http://localhost:8081",
+      accessKeyId: "zeaq37",
+      secretAccessKey: "eyw4ab",
+    }
 /**
  * Locking the API Version
  * https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html
  */
-const dynamoDb = new AWS.DynamoDB(
-  isEnvProduction
-    ? {
-        apiVersion: "2012-08-10",
-        region: "us-east-1",
-        endpoint: "https://dynamodb.us-east-1.amazonaws.com",
-        accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
-      }
-    : {
-        apiVersion: "2012-08-10",
-        region: "localhost",
-        endpoint: "http://localhost:8081",
-        accessKeyId: "zeaq37",
-        secretAccessKey: "eyw4ab",
-      }
-)
-const docClient = new AWS.DynamoDB.DocumentClient()
+const dynamoDb = new AWS.DynamoDB(options)
+/**
+ * Difference between DynamoDB & DocumentClient
+ * https://stackoverflow.com/a/57807642/9823455
+ */
+const docClient = new AWS.DynamoDB.DocumentClient(options)
 
 export { AWS, dynamoDb, docClient }
