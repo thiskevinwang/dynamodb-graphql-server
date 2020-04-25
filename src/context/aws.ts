@@ -27,7 +27,7 @@ AWS.config.update(
  * Locking the API Version
  * https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html
  */
-const dynamodb = new AWS.DynamoDB(
+const dynamoDb = new AWS.DynamoDB(
   isEnvProduction
     ? {
         apiVersion: "2012-08-10",
@@ -46,4 +46,4 @@ const dynamodb = new AWS.DynamoDB(
 )
 const docClient = new AWS.DynamoDB.DocumentClient()
 
-export { AWS, dynamodb, docClient }
+export { AWS, dynamoDb, docClient }

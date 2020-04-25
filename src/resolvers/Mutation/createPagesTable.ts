@@ -1,14 +1,18 @@
-import chalk from "chalk";
+import DynamoDB from "aws-sdk/clients/dynamodb"
 
-import { PAGES } from "../index";
+import { ResolverFn } from "resolvers/ResolverFn"
 
-const yellow = chalk.underline.yellowBright;
+import { PAGES } from "../index"
 
-export const createPagesTable = async (obj, args, context, info) => {
-  const { dynamodb } = context;
-  const { fieldName, parentType } = info;
+export const createPagesTable: ResolverFn = async (
+  obj,
+  args,
+  context,
+  info
+) => {
+  const { dynamoDb } = context
 
-  const params = {
+  const params: DynamoDB.CreateTableInput = {
     TableName: PAGES,
     KeySchema: [
       { AttributeName: "id", KeyType: "HASH" }, // partition key
@@ -22,13 +26,7 @@ export const createPagesTable = async (obj, args, context, info) => {
       ReadCapacityUnits: 5,
       WriteCapacityUnits: 5,
     },
-  };
+  }
 
-  return dynamodb
-    .createTable(params)
-    .promise()
-    .then((res, rej) => {
-      if (res) console.log("resolved:", res);
-      if (rej) console.log("rejected:", rej);
-    });
-};
+  return dynamoDb.createTable(params).promise()
+}

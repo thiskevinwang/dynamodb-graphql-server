@@ -1,13 +1,13 @@
-import chalk from "chalk";
+import DynamoDB from "aws-sdk/clients/dynamodb"
 
-import { IPS } from "../index";
+import { ResolverFn } from "resolvers/ResolverFn"
 
-const yellow = chalk.underline.yellowBright;
+import { IPS } from "../index"
 
-export const createIpsTable = async (obj, args, context, info) => {
-  const { dynamodb } = context;
+export const createIpsTable: ResolverFn = async (obj, args, context, info) => {
+  const { dynamoDb } = context
 
-  const params = {
+  const params: DynamoDB.CreateTableInput = {
     TableName: IPS,
     KeySchema: [
       { AttributeName: "id", KeyType: "HASH" }, // partition key
@@ -21,13 +21,7 @@ export const createIpsTable = async (obj, args, context, info) => {
       ReadCapacityUnits: 5,
       WriteCapacityUnits: 5,
     },
-  };
+  }
 
-  return dynamodb
-    .createTable(params)
-    .promise()
-    .then((res, rej) => {
-      if (res) console.log("resolved:", res);
-      if (rej) console.log("rejected:", rej);
-    });
-};
+  return dynamoDb.createTable(params).promise()
+}

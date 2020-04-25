@@ -1,10 +1,13 @@
 import chalk from "chalk"
+import DynamoDB from "aws-sdk/clients/dynamodb"
+
+import { ResolverFn } from "resolvers/ResolverFn"
 
 import { IPS } from "../index"
 
 const yellow = chalk.underline.yellowBright
 
-export const trackIpVisits = async (obj, args, context, info) => {
+export const trackIpVisits: ResolverFn = async (obj, args, context, info) => {
   const { docClient } = context
   const {
     fieldName,
@@ -17,10 +20,10 @@ export const trackIpVisits = async (obj, args, context, info) => {
    *   access the internet
    * @see https://www.prisma.io/forum/t/how-do-i-get-the-ip-address-from-the-client/4429/6
    */
-  const ipAddress = context.req.headers["x-forwarded-for"] || "no ip"
+  const ipAddress = context.req.headers["x-forwarded-for"][0] || "no ip"
   const now = Date.now()
 
-  const params = {
+  const params: DynamoDB.DocumentClient.UpdateItemInput = {
     TableName: IPS,
     Key: {
       id: 1,
@@ -52,7 +55,7 @@ export const trackIpVisits = async (obj, args, context, info) => {
     console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`))
     console.log(chalk.grey(ipAddress))
     if (err) {
-      console.error(chalk.red(err))
+      console.error(chalk.red(err.message))
     } else {
       console.log(data)
     }

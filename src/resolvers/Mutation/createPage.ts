@@ -1,21 +1,24 @@
-import chalk from "chalk";
+import chalk from "chalk"
+import DynamoDB from "aws-sdk/clients/dynamodb"
 
-import { PAGES } from "../index";
+import { ResolverFn } from "resolvers/ResolverFn"
 
-const yellow = chalk.underline.yellowBright;
+import { PAGES } from "../index"
 
-export const createPage = async (obj, args, context, info) => {
-  const { id, location } = args;
-  const { docClient } = context;
-  const { fieldName, parentType } = info;
+const yellow = chalk.underline.yellowBright
 
-  const created_at = Date.now();
+export const createPage: ResolverFn = async (obj, args, context, info) => {
+  const { id, location } = args
+  const { docClient } = context
+  const { fieldName, parentType } = info
+
+  const created_at = Date.now()
 
   /**
    * preventing overwrite
    * @see https://stackoverflow.com/a/46531548/9823455
    */
-  const params = {
+  const params: DynamoDB.DocumentClient.PutItemInput = {
     TableName: PAGES,
     Item: {
       id: id,
@@ -56,21 +59,21 @@ export const createPage = async (obj, args, context, info) => {
     },
     /** ` NONE | ALL_OLD | UPDATED_OLD | ALL_NEW | UPDATED_NEW ` */
     // ReturnValues: "UPDATED_OLD"
-  };
+  }
 
   /**
    * docClient.put() doesn't return anything
    */
   return docClient.put(params, function (err, data) {
-    console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`));
-    console.log(chalk.grey(location));
+    console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`))
+    console.log(chalk.grey(location))
 
     if (err) {
-      console.error(chalk.red(err));
+      console.error(chalk.red(err.message))
     } else {
-      console.log(data);
+      console.log(data)
     }
-    console.log("\n");
-    console.groupEnd();
-  });
-};
+    console.log("\n")
+    console.groupEnd()
+  })
+}

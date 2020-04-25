@@ -1,14 +1,18 @@
-import chalk from "chalk";
-import { IPS } from "../index";
+import chalk from "chalk"
+import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
-const green = chalk.underline.greenBright;
+import { ResolverFn } from "resolvers/ResolverFn"
 
-export const getIps = async (obj, args, context, info) => {
-  const table = IPS;
-  const { docClient } = context;
-  const { fieldName, parentType } = info;
+import { IPS } from "../index"
 
-  const params = {
+const green = chalk.underline.greenBright
+
+export const getIps: ResolverFn = async (obj, args, context, info) => {
+  const table = IPS
+  const { docClient } = context
+  const { fieldName, parentType } = info
+
+  const params: DocumentClient.ScanInput = {
     TableName: table,
     // Key: {
     //   year: year,
@@ -21,9 +25,9 @@ export const getIps = async (obj, args, context, info) => {
     //   ":a": ["Larry", "Moe", "Curly"]
     // },
     // ReturnValues: "UPDATED_NEW"
-  };
+  }
 
-  console.log("Scanning for items...");
+  console.log("Scanning for items...")
   return docClient
     .scan(
       params
@@ -40,15 +44,15 @@ export const getIps = async (obj, args, context, info) => {
       // }
     )
     .promise()
-    .then((res) => {
-      console.group(green(`${chalk.bold(parentType)}: ${fieldName}`));
-      console.log(res);
-      console.log("\n");
-      console.groupEnd();
-      const { Items, Count, ScannedCount } = res;
+    .then(res => {
+      console.group(green(`${chalk.bold(parentType)}: ${fieldName}`))
+      console.log(res)
+      console.log("\n")
+      console.groupEnd()
+      const { Items, Count, ScannedCount } = res
       // Restructure the dynamodb response for better graphql handling
-      console.log(Items);
+      console.log(Items)
       // return { Ips: Items, Count, ScannedCount };
-      return Items;
-    });
-};
+      return Items
+    })
+}

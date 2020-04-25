@@ -1,20 +1,24 @@
-import chalk from "chalk";
-import { PAGES } from "../index";
+import chalk from "chalk"
+import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
-const green = chalk.underline.greenBright;
+import { ResolverFn } from "resolvers/ResolverFn"
 
-export const getPage = async (obj, args, context, info) => {
-  const { id, location } = args;
-  const { docClient } = context;
-  const { fieldName, parentType } = info;
+import { PAGES } from "../index"
 
-  const params = {
+const green = chalk.underline.greenBright
+
+export const getPage: ResolverFn = async (obj, args, context, info) => {
+  const { id, location } = args
+  const { docClient } = context
+  const { fieldName, parentType } = info
+
+  const params: DocumentClient.GetItemInput = {
     TableName: PAGES,
     Key: {
-      id: id,
-      location: location,
+      id,
+      location,
     },
-  };
+  }
   /**
    * In order to get a return value from `docClient`, you need to call
    * docClient.get(params).promise.
@@ -38,13 +42,13 @@ export const getPage = async (obj, args, context, info) => {
       // }
     )
     .promise()
-    .then((res) => {
-      console.group(green(`${chalk.bold(parentType)}: ${fieldName}`));
-      console.log(chalk.grey(location));
-      console.log(res);
-      console.log("\n");
-      console.groupEnd();
-      const { Item } = res;
-      return Item;
-    });
-};
+    .then(res => {
+      console.group(green(`${chalk.bold(parentType)}: ${fieldName}`))
+      console.log(chalk.grey(location))
+      console.log(res)
+      console.log("\n")
+      console.groupEnd()
+      const { Item } = res
+      return Item
+    })
+}
