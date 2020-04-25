@@ -20,7 +20,9 @@ export const trackIpVisits: ResolverFn = async (obj, args, context, info) => {
    *   access the internet
    * @see https://www.prisma.io/forum/t/how-do-i-get-the-ip-address-from-the-client/4429/6
    */
-  const ipAddress = context.req.headers["x-forwarded-for"][0] || "no ip"
+  const ipAddress = Array.isArray(context.req.headers["x-forwarded-for"])
+    ? context.req.headers["x-forwarded-for"][0]
+    : context.req.headers["x-forwarded-for"] ?? "no ip"
   const now = Date.now()
 
   const params: DynamoDB.DocumentClient.UpdateItemInput = {

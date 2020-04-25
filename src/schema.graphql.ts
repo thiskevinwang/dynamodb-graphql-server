@@ -1,4 +1,4 @@
-import { gql } from "apollo-server";
+import { gql } from "apollo-server"
 
 export const typeDefs = gql`
   scalar Date
@@ -99,6 +99,7 @@ export const typeDefs = gql`
     getPages: Pages
     getPage(location: String!, id: Int): Page
     getIps: [Ip]
+    getIp: String!
   }
 
   type Mutation {
@@ -109,4 +110,4 @@ export const typeDefs = gql`
     trackIpVisits: String
     createIpsTable: Table
   }
-`;
+`
