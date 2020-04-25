@@ -1,5 +1,4 @@
-import { getPage } from "./getPage";
-import { getPages } from "./getPages";
-import { getIps } from "./getIps";
-
-export default { getPage, getPages, getIps };
+export { getPage } from "./getPage"
+export { getPages } from "./getPages"
+export { getIp } from "./getIp"
+export { getIps } from "./getIps"

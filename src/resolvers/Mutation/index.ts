@@ -1,13 +1,5 @@
-import { createIpsTable } from "./createIpsTable";
-import { createPage } from "./createPage";
-import { createPagesTable } from "./createPagesTable";
-import { incrementViews } from "./incrementViews";
-import { trackIpVisits } from "./trackIpVisits";
-
-export default {
-  createIpsTable,
-  createPage,
-  createPagesTable,
-  incrementViews,
-  trackIpVisits,
-};
+export { createIpsTable } from "./createIpsTable"
+export { createPage } from "./createPage"
+export { createPagesTable } from "./createPagesTable"
+export { incrementViews } from "./incrementViews"
+export { trackIpVisits } from "./trackIpVisits"

@@ -1,5 +1,5 @@
-import Query from "./Query"
-import Mutation from "./Mutation"
+import * as Query from "./Query"
+import * as Mutation from "./Mutation"
 import Subscription from "./Subscription"
 
 export const PAGES = "Pages"
