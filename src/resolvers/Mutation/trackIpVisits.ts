@@ -1,15 +1,15 @@
-import chalk from "chalk";
+import chalk from "chalk"
 
-import { IPS } from "../index";
+import { IPS } from "../index"
 
-const yellow = chalk.underline.yellowBright;
+const yellow = chalk.underline.yellowBright
 
 export const trackIpVisits = async (obj, args, context, info) => {
-  const { docClient } = context;
+  const { docClient } = context
   const {
     fieldName,
     parentType, // Mutation
-  } = info;
+  } = info
   /**
    * # ipAddress
    * - `x-forwared-for` will not appear in `context.req.headers` if the request is
@@ -17,8 +17,8 @@ export const trackIpVisits = async (obj, args, context, info) => {
    *   access the internet
    * @see https://www.prisma.io/forum/t/how-do-i-get-the-ip-address-from-the-client/4429/6
    */
-  const ipAddress = context.req.headers["x-forwarded-for"] || "no ip";
-  const now = Date.now();
+  const ipAddress = context.req.headers["x-forwarded-for"] || "no ip"
+  const now = Date.now()
 
   const params = {
     TableName: IPS,
@@ -46,19 +46,19 @@ export const trackIpVisits = async (obj, args, context, info) => {
       ":empty_list": [],
     },
     // ReturnValues: "UPDATED_NEW"
-  };
+  }
 
-  const value = docClient.update(params, function (err, data) {
-    console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`));
-    console.log(chalk.grey(ipAddress));
+  const value = docClient.update(params, (err, data) => {
+    console.group(yellow(`${chalk.bold(parentType)}: ${fieldName}`))
+    console.log(chalk.grey(ipAddress))
     if (err) {
-      console.error(chalk.red(err));
+      console.error(chalk.red(err))
     } else {
-      console.log(data);
+      console.log(data)
     }
-    console.log("\n");
-    console.groupEnd();
-  });
-  console.log("value", value);
-  return ipAddress;
-};
+    console.log("\n")
+    console.groupEnd()
+  })
+  console.log("value", value)
+  return ipAddress
+}
