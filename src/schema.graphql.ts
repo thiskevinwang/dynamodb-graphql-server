@@ -55,11 +55,6 @@ export const typeDefs = gql`
     Ips: [Ip]
   }
 
-  type BillingModeSummary {
-    BillingMode: String
-    LastUpdateToPayPerRequestDateTime: String
-  }
-
   type ProvisionedThroughput {
     LastIncreaseDateTime: String
     LastDecreaseDateTime: String
@@ -85,7 +80,6 @@ export const typeDefs = gql`
     TableSizeBytes: Int
     ItemCount: Int
     TableArn: String
-    BillingModeSummary: BillingModeSummary
     ProvisionedThroughput: ProvisionedThroughput
     KeySchema: [KeySchema]
     AttributeDefinitions: [AttributeDefinitions]
@@ -94,19 +88,19 @@ export const typeDefs = gql`
   type Table {
     TableDescription: TableDescription
   }
-  type Query {
-    # TODO: remove Pages type, and copy how Ips are handled.
-    getPages: Pages
-    getPage(location: String!, id: Int): Page
-    getIps: [Ip]
-    getIp: String!
-  }
-
   type Mutation {
-    createPagesTable: Table
+    createIpsTable: Table
     createPage(location: String!, id: Int): Page
+    createPagesTable: Table
     incrementViews(location: String!, id: Int): Attributes
     trackIpVisits: String
-    createIpsTable: Table
+  }
+
+  type Query {
+    getIp: String!
+    getIps: [Ip]
+    getPage(location: String!, id: Int): Page
+    getPages: Pages
+    listTables: [String]
   }
 `
