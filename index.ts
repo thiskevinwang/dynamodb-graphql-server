@@ -1,6 +1,5 @@
 import { ApolloServer, PubSub } from "apollo-server"
 import { Request, Response } from "express"
-import chalk from "chalk"
 
 import { typeDefs } from "./src/schema.graphql"
 import { resolvers } from "./src/resolvers"
@@ -29,9 +28,7 @@ const server = new ApolloServer({
   }),
 })
 
-const highlight = chalk.bold.underline.blueBright
-
 server.listen().then(({ url, subscriptionsUrl }) => {
-  console.log(`🚀 Server ready at ${highlight(url)}`)
-  console.log(`🚀 Subscriptions ready at ${highlight(subscriptionsUrl)}`)
+  console.log(`🚀 Server ready at ${url}`)
+  console.log(`🚀 Subscriptions ready at ${subscriptionsUrl}`)
 })

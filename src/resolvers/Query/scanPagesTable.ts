@@ -1,4 +1,3 @@
-import chalk from "chalk"
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 import { ResolverFn } from "resolvers/ResolverFn"
