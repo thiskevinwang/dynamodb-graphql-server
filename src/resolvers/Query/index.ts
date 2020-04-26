@@ -1,6 +1,6 @@
-export { getPage } from "./getPage"
-export { scanPagesTable } from "./scanPagesTable"
 export { getIp } from "./getIp"
-export { scanIpsTable } from "./scanIpsTable"
-
+export { getPage } from "./getPage"
 export { listTables } from "./listTables"
+export { queryMovies } from "./queryMovies"
+export { scanIpsTable } from "./scanIpsTable"
+export { scanPagesTable } from "./scanPagesTable"
