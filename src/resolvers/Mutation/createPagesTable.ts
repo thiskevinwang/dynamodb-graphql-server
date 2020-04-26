@@ -28,5 +28,24 @@ export const createPagesTable: ResolverFn = async (
     },
   }
 
-  return dynamoDb.createTable(params).promise()
+  /**
+   * CREATE
+   */
+  return dynamoDb
+    .createTable(params)
+    .promise()
+    .then(res => {
+      console.log("res", res.TableDescription)
+      return res
+    })
+  /**
+   * DELETE
+   */
+  return dynamoDb
+    .deleteTable({ TableName: PAGES })
+    .promise()
+    .then(res => {
+      console.log("res", res.TableDescription)
+      return res
+    })
 }
