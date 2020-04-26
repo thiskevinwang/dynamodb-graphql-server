@@ -2,11 +2,11 @@ require("dotenv").config()
 import AWS from "aws-sdk"
 
 // Safe to say that running `now` updates `process.env.NODE_ENV` to `production`
-const isEnvProduction = process.env.NODE_ENV === "production"
-const isEnvDevelopment = process.env.NODE_ENV === "development"
+const __PROD__ = process.env.NODE_ENV === "production"
+const __DEV__ = process.env.NODE_ENV === "development"
 
 AWS.config.update(
-  isEnvProduction
+  __PROD__
     ? {
         region: "us-east-1",
         // accessKeyId default can be used while using the downloadable version of DynamoDB.
@@ -17,15 +17,15 @@ AWS.config.update(
         secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
       }
     : {
-        region: "localhost",
-        accessKeyId: "zeaq37",
-        secretAccessKey: "eyw4ab",
+        // region: "localhost",
+        // accessKeyId: "zeaq37",
+        // secretAccessKey: "eyw4ab",
       }
 )
 
 const options:
   | AWS.DynamoDB.ClientConfiguration
-  | AWS.DynamoDB.DocumentClient.DocumentClientOptions = isEnvProduction
+  | AWS.DynamoDB.DocumentClient.DocumentClientOptions = __PROD__
   ? {
       apiVersion: "2012-08-10",
       region: "us-east-1",
@@ -37,8 +37,13 @@ const options:
       apiVersion: "2012-08-10",
       region: "localhost",
       endpoint: "http://localhost:8081",
-      accessKeyId: "zeaq37",
-      secretAccessKey: "eyw4ab",
+      /**
+       * if connecting to the NoSQL Workbench DB, use these.
+       *
+       * if connecting to docker DB, leave empty
+       */
+      // accessKeyId: "zeaq37",
+      // secretAccessKey: "eyw4ab",
     }
 /**
  * Locking the API Version
