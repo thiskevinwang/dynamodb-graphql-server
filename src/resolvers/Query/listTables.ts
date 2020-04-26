@@ -1,26 +1,24 @@
-import chalk from "chalk"
-import DynamoDB, { TableNameList } from "aws-sdk/clients/dynamodb"
+import { TableNameList } from "aws-sdk/clients/dynamodb"
 
 import { ResolverFn } from "resolvers/ResolverFn"
-
-const green = chalk.underline.greenBright
 
 export const listTables: ResolverFn<TableNameList> = async (
   obj,
   args,
   context,
-  info
+  { parentType, fieldName }
 ) => {
   const { dynamoDb } = context
-  const { parentType, fieldName } = info
 
-  let res
-  try {
-    res = await dynamoDb.listTables().promise()
-
-    console.group(green(parentType.name), `: ${fieldName}`)
-    console.log(res)
-    console.groupEnd()
-    return res.TableNames
-  } catch (err) {}
+  return dynamoDb
+    .listTables()
+    .promise()
+    .then(res => {
+      console.info(parentType.name, fieldName, res)
+      return res.TableNames
+    })
+    .catch(err => {
+      console.error(parentType.name, fieldName, err.message)
+      throw err
+    })
 }
