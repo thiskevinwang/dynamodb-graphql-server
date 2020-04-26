@@ -59,7 +59,7 @@ export const typeDefs = gql`
     createIpsTable: Table
     createPage(location: String!, id: Int): Page
     createPagesTable: Table
-    incrementViews(location: String!, id: Int): Attributes
+    incrementViews(location: String!, id: Int): PageAttributes
     trackIpVisits: String
   }
 
