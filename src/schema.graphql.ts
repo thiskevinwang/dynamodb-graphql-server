@@ -55,12 +55,16 @@ export const typeDefs = gql`
     TableDescription: TableDescription
   }
 
+  type TrackIpVisitsResponse {
+    visits: [String]
+  }
+
   type Mutation {
     createIpsTable: Table
     createPage(location: String!, id: Int): Page
     createPagesTable: Table
     incrementViews(location: String!, id: Int): PageAttributes
-    trackIpVisits: String
+    trackIpVisits: TrackIpVisitsResponse
   }
 
   type Query {

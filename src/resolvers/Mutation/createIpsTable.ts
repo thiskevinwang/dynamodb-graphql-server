@@ -4,7 +4,12 @@ import { ResolverFn } from "resolvers/ResolverFn"
 
 import { IPS } from "../index"
 
-export const createIpsTable: ResolverFn = async (obj, args, context, info) => {
+export const createIpsTable: ResolverFn = async (
+  obj,
+  args,
+  context,
+  { fieldName, parentType }
+) => {
   const { dynamoDb } = context
 
   const params: DynamoDB.CreateTableInput = {
@@ -30,8 +35,12 @@ export const createIpsTable: ResolverFn = async (obj, args, context, info) => {
     .createTable(params)
     .promise()
     .then(res => {
-      console.log("res", res.TableDescription)
-      return res
+      console.info(parentType.name, fieldName, res)
+      return res.TableDescription
+    })
+    .catch(err => {
+      console.error(parentType.name, fieldName, err.message)
+      throw err
     })
   /**
    * DELETE

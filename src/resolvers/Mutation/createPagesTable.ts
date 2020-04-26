@@ -8,7 +8,7 @@ export const createPagesTable: ResolverFn = async (
   obj,
   args,
   context,
-  info
+  { fieldName, parentType }
 ) => {
   const { dynamoDb } = context
 
@@ -35,8 +35,12 @@ export const createPagesTable: ResolverFn = async (
     .createTable(params)
     .promise()
     .then(res => {
-      console.log("res", res.TableDescription)
-      return res
+      console.info(parentType.name, fieldName, res)
+      return res.TableDescription
+    })
+    .catch(err => {
+      console.error(parentType.name, fieldName, err.message)
+      throw err
     })
   /**
    * DELETE

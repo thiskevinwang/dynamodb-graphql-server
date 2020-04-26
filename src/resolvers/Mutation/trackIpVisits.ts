@@ -1,18 +1,16 @@
-import chalk from "chalk"
 import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import { ResolverFn } from "resolvers/ResolverFn"
 
 import { IPS } from "../index"
 
-const yellow = chalk.underline.yellowBright
-
-export const trackIpVisits: ResolverFn = async (obj, args, context, info) => {
+export const trackIpVisits: ResolverFn = async (
+  obj,
+  args,
+  context,
+  { fieldName, parentType }
+) => {
   const { docClient } = context
-  const {
-    fieldName,
-    parentType, // Mutation
-  } = info
   /**
    * # ipAddress
    * - `x-forwared-for` will not appear in `context.req.headers` if the request is
@@ -50,20 +48,18 @@ export const trackIpVisits: ResolverFn = async (obj, args, context, info) => {
       ":now": [now],
       ":empty_list": [],
     },
-    // ReturnValues: "UPDATED_NEW"
+    ReturnValues: "UPDATED_OLD",
   }
 
-  const value = docClient.update(params, (err, data) => {
-    console.group(yellow(`${chalk.bold(parentType.name)}: ${fieldName}`))
-    console.log(chalk.grey(ipAddress))
-    if (err) {
-      console.error(chalk.red(err.message))
-    } else {
-      console.log(data)
-    }
-    console.log("\n")
-    console.groupEnd()
-  })
-  console.log("value", value)
-  return ipAddress
+  return docClient
+    .update(params)
+    .promise()
+    .then(res => {
+      console.info(parentType.name, fieldName, res)
+      return res.Attributes
+    })
+    .catch(err => {
+      console.error(parentType.name, fieldName, err.message)
+      throw err
+    })
 }

@@ -62,7 +62,7 @@ export const createPage: ResolverFn = async (
     ReturnValues: "ALL_OLD",
   }
 
-  return await docClient
+  return docClient
     .put(params)
     .promise()
     .then(res => {
@@ -70,7 +70,7 @@ export const createPage: ResolverFn = async (
       return res.Attributes
     })
     .catch(err => {
-      console.error(parentType.name, fieldName, err)
+      console.error(parentType.name, fieldName, err.message)
       throw err
     })
 }
