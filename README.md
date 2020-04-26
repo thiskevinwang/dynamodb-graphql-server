@@ -40,3 +40,74 @@ Node:
 ### DynamoDB Data Model
 
 - https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.html
+
+### Cheatsheet
+
+#### CLI Commands
+
+##### Help
+
+```bash
+aws dynamodb help
+```
+
+##### List Tables
+
+```bash
+aws dynamodb list-tables help
+aws dynamodb list-tables --endpoint-url http://localhost:8081
+```
+
+##### Scan
+
+```bash
+aws dynamodb scan help
+aws dynamodb scan --table-name Snacks
+```
+
+##### Put Item
+
+```bash
+aws dynamodb put-item help
+aws dynamodb put-item --table-name Snacks --item '{"Id": {"S": "1"}}'
+```
+
+##### Update Item
+
+```bash
+aws dynamodb update-item help
+
+# Add / Overwrite Attribute
+aws dynamodb update-item \
+  --table-name Snacks \
+  --key '{"Id": {"S": "1"}}' \
+  --attribute-updates '{"MyNewAttributeName": {"Value": {"S":"Poteko"}}}'
+
+# Actions --- [ADD, DELETE, PUT]
+
+# Delete Attribute
+# - "Value" (not required)
+aws dynamodb update-item \
+  --table-name Snacks \
+  --key '{"Id": {"S": "1"}}' \
+  --attribute-updates '{"MyNewAttributeName": {"Action": "DELETE" }}'
+
+# Increment/Decrement a "N" Attribute
+aws dynamodb update-item \
+  --table-name Snacks \
+  --key '{"Id": {"S": "1"}}' \
+  --attribute-updates \
+  '{"Count": {"Value": {"N":"0"}}}'
+
+aws dynamodb update-item \
+  --table-name Snacks \
+  --key '{"Id": {"S": "1"}}' \
+  --attribute-updates \
+  '{ "Count": {"Action": "ADD",  "Value": {"N":"1"}}}'
+
+aws dynamodb update-item \
+  --table-name Snacks \
+  --key '{"Id": {"S": "1"}}' \
+  --attribute-updates \
+  '{ "Count": {"Action": "ADD",  "Value": {"N":"-1"}}}'
+```

@@ -1,63 +1,24 @@
-import { gql } from "apollo-server";
+import { gql } from "apollo-server"
 
 export const typeDefs = gql`
   scalar Date
 
-  type Subscription {
-    userAdded: User
-    userUpdated: User
-  }
-
-  type Attributes {
+  type PageAttributes {
     views: Int
     created_at: Date
     updated_at: Date
   }
 
-  type User {
-    id: Int
-    username: String
-    attributes: Attributes
-  }
-
-  type Users {
-    Count: Int
-    ScannedCount: Int
-    Users: [User]
-  }
   type Page {
     id: Int
     location: String
-    attributes: Attributes
-  }
-
-  """
-  Weird DynamoDB response structure...
-  """
-  type Pages {
-    Count: Int
-    ScannedCount: Int
-    Pages: [Page]
+    attributes: PageAttributes
   }
 
   type Ip {
     id: Int
     ipAddress: String
-    # TODO: idea
     visits: [Date]
-  }
-  """
-  Weird DynamoDB response structure...
-  """
-  type Ips {
-    Count: Int
-    ScannedCount: Int
-    Ips: [Ip]
-  }
-
-  type BillingModeSummary {
-    BillingMode: String
-    LastUpdateToPayPerRequestDateTime: String
   }
 
   type ProvisionedThroughput {
@@ -85,7 +46,6 @@ export const typeDefs = gql`
     TableSizeBytes: Int
     ItemCount: Int
     TableArn: String
-    BillingModeSummary: BillingModeSummary
     ProvisionedThroughput: ProvisionedThroughput
     KeySchema: [KeySchema]
     AttributeDefinitions: [AttributeDefinitions]
@@ -94,19 +54,24 @@ export const typeDefs = gql`
   type Table {
     TableDescription: TableDescription
   }
-  type Query {
-    # TODO: remove Pages type, and copy how Ips are handled.
-    getPages: Pages
-    getPage(location: String!, id: Int): Page
-    getIps: [Ip]
+
+  type TrackIpVisitsResponse {
+    visits: [String]
   }
 
   type Mutation {
-    createPagesTable: Table
-    createPage(location: String!, id: Int): Page
-    incrementViews(location: String!, id: Int): Attributes
-    trackIp: String
-    trackIpVisits: String
     createIpsTable: Table
+    createPage(location: String!, id: Int): Page
+    createPagesTable: Table
+    incrementViews(location: String!, id: Int): PageAttributes
+    trackIpVisits: TrackIpVisitsResponse
   }
-`;
+
+  type Query {
+    getIp: String!
+    scanIpsTable: [Ip]
+    getPage(location: String!, id: Int): Page
+    scanPagesTable: [Page]
+    listTables: [String]
+  }
+`
