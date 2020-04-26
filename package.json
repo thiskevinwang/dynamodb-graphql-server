@@ -11,6 +11,7 @@
     "format": "prettier --write src/**/*.ts",
     "lint": "tslint -p tsconfig.json"
   },
+  "pre-commit": "lint-staged",
   "keywords": [],
   "author": "",
   "license": "ISC",
