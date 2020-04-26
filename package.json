@@ -9,7 +9,8 @@
     "dev": "ts-node-dev --no-notify --respawn --transpileOnly ./",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write src/**/*.ts",
-    "lint": "tslint -p tsconfig.json"
+    "lint": "tslint -p tsconfig.json",
+    "lint-staged": "lint-staged"
   },
   "pre-commit": "lint-staged",
   "keywords": [],
