@@ -93,7 +93,8 @@ export const typeDefs = gql`
     getPage(location: String!, id: Int): Page
     listTables: [String]
     queryMovies: [Movie] @development
-    scanIpsTable: [Ip]
-    scanPagesTable: [Page]
+    queryPages: [Page]
+    scanIpsTable: [Ip] @development
+    scanPagesTable: [Page] @development
   }
 `
