@@ -3,7 +3,7 @@ import { gql } from "apollo-server"
 export const typeDefs = gql`
   scalar Date
 
-  type Attributes {
+  type PageAttributes {
     views: Int
     created_at: Date
     updated_at: Date
@@ -12,25 +12,13 @@ export const typeDefs = gql`
   type Page {
     id: Int
     location: String
-    attributes: Attributes
-  }
-
-  type Pages {
-    Count: Int
-    ScannedCount: Int
-    Pages: [Page]
+    attributes: PageAttributes
   }
 
   type Ip {
     id: Int
     ipAddress: String
     visits: [Date]
-  }
-
-  type Ips {
-    Count: Int
-    ScannedCount: Int
-    Ips: [Ip]
   }
 
   type ProvisionedThroughput {
@@ -79,7 +67,7 @@ export const typeDefs = gql`
     getIp: String!
     getIps: [Ip]
     getPage(location: String!, id: Int): Page
-    getPages: Pages
+    getPages: [Page]
     listTables: [String]
   }
 `
