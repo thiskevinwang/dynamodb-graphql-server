@@ -65,9 +65,9 @@ export const typeDefs = gql`
 
   type Query {
     getIp: String!
-    getIps: [Ip]
+    scanIpsTable: [Ip]
     getPage(location: String!, id: Int): Page
-    getPages: [Page]
+    scanPagesTable: [Page]
     listTables: [String]
   }
 `

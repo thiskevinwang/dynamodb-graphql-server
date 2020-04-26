@@ -1,18 +1,17 @@
-import chalk from "chalk"
 import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import { ResolverFn } from "resolvers/ResolverFn"
 
 import { PAGES } from "../index"
 
-const yellow = chalk.underline.yellowBright
-
-export const createPage: ResolverFn = async (obj, args, context, info) => {
+export const createPage: ResolverFn = async (
+  obj,
+  args,
+  context,
+  { fieldName, parentType }
+) => {
   const { id, location } = args
   const { docClient } = context
-  const { fieldName, parentType } = info
-
-  const created_at = Date.now()
 
   /**
    * preventing overwrite
@@ -21,13 +20,8 @@ export const createPage: ResolverFn = async (obj, args, context, info) => {
   const params: DynamoDB.DocumentClient.PutItemInput = {
     TableName: PAGES,
     Item: {
-      id: id,
-      location: location,
-      attributes: {
-        views: 1,
-        created_at,
-        updated_at: null,
-      },
+      id,
+      location,
     },
     /**
      * ConditionExpression
@@ -46,34 +40,37 @@ export const createPage: ResolverFn = async (obj, args, context, info) => {
      *
      * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html
      * */
-    ConditionExpression: "#location <> :location", // put succeed if # !== :
+    // ConditionExpression: "#location <> :location", // put succeed if # !== :
+
     /**
      * use this to avoid the error:
      * _"Invalid ConditionExpression: Attribute name is a reserved keyword;_
      */
-    ExpressionAttributeNames: {
-      "#location": "location", // set # === Item.location
-    },
-    ExpressionAttributeValues: {
-      ":location": location, // set : === location
-    },
-    /** ` NONE | ALL_OLD | UPDATED_OLD | ALL_NEW | UPDATED_NEW ` */
-    // ReturnValues: "UPDATED_OLD"
+    // ExpressionAttributeNames: {
+    //   "#location": "location", // set # === Item.location
+    // },
+    // ExpressionAttributeValues: {
+    //   ":location": location, // set : === location
+    // },
+
+    /**
+     * Required to return a value
+     * NONE | ALL_OLD | UPDATED_OLD | ALL_NEW | UPDATED_NEW
+     *
+     * https://stackoverflow.com/a/55171022/9823455
+     */
+    ReturnValues: "ALL_OLD",
   }
 
-  /**
-   * docClient.put() doesn't return anything
-   */
-  return docClient.put(params, function (err, data) {
-    console.group(yellow(`${chalk.bold(parentType.name)}: ${fieldName}`))
-    console.log(chalk.grey(location))
-
-    if (err) {
-      console.error(chalk.red(err.message))
-    } else {
-      console.log(data)
-    }
-    console.log("\n")
-    console.groupEnd()
-  })
+  return await docClient
+    .put(params)
+    .promise()
+    .then(res => {
+      console.info(parentType.name, fieldName, res)
+      return res.Attributes
+    })
+    .catch(err => {
+      console.error(parentType.name, fieldName, err)
+      throw err
+    })
 }
