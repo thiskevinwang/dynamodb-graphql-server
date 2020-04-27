@@ -1,6 +1,6 @@
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
-import { ResolverFn } from "resolvers/ResolverFn"
+import type { ResolverFn } from "resolvers/ResolverFn"
 
 import { PAGES } from "../index"
 

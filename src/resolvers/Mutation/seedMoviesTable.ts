@@ -1,7 +1,8 @@
 import DynamoDB from "aws-sdk/clients/dynamodb"
 import ora from "ora"
 
-import { ResolverFn } from "resolvers/ResolverFn"
+import type { ResolverFn } from "resolvers/ResolverFn"
+
 import allMovies from "./__mocks__/moviedata.json"
 
 const spinner = ora("Seeding Movies")

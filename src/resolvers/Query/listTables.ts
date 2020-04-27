@@ -1,6 +1,6 @@
 import { TableNameList } from "aws-sdk/clients/dynamodb"
 
-import { ResolverFn } from "resolvers/ResolverFn"
+import type { ResolverFn } from "resolvers/ResolverFn"
 
 export const listTables: ResolverFn<TableNameList> = async (
   obj,
