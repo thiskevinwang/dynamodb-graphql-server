@@ -77,12 +77,29 @@ export const typeDefs = gql`
     title: String
     info: MovieInfo
   }
+  type Snack {
+    PK: String
+    SK: String
+    DisplayName: String
+    Tastes: [String]
+    Textures: [String]
+    Rating: Int
+    ImageUrls: [String]
+  }
 
   type Mutation {
     createIpsTable: Table
     createMoviesTable: Table @development
     createPage(location: String, id: Int): Page
     createPagesTable: Table
+    createSnack(
+      category: String!
+      name: String!
+      tastes: [String]
+      textures: [String]
+      imageUrls: [String]
+    ): Snack
+    createSnacksTable: Table
     incrementViews(location: String!, id: Int): PageAttributes
     seedMoviesTable: String @development
     trackIpVisits: TrackIpVisitsResponse
@@ -94,7 +111,9 @@ export const typeDefs = gql`
     listTables: [String]
     queryMovies: [Movie] @development
     queryPages: [Page]
+    querySnacks(category: String): [Snack]
     scanIpsTable: [Ip] @development
     scanPagesTable: [Page] @development
+    scanSnacksTable: [Snack] @development
   }
 `
