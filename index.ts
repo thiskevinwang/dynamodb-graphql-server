@@ -1,10 +1,10 @@
 import { ApolloServer, PubSub, SchemaDirectiveVisitor } from "apollo-server"
 import { Request, Response } from "express"
+import { GraphQLField } from "graphql"
 
 import { typeDefs } from "./src/schema.graphql"
 import { resolvers } from "./src/resolvers"
 import { AWS, dynamoDb, docClient } from "./src/context/aws"
-import { GraphQLField } from "graphql"
 
 const pubsub = new PubSub()
 export interface Context {
