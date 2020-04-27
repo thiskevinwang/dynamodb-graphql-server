@@ -17,9 +17,9 @@ AWS.config.update(
         secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
       }
     : {
-        // region: "localhost",
-        // accessKeyId: "zeaq37",
-        // secretAccessKey: "eyw4ab",
+        region: "localhost",
+        accessKeyId: "zeaq37",
+        secretAccessKey: "eyw4ab",
       }
 )
 
@@ -42,8 +42,8 @@ const options:
        *
        * if connecting to docker DB, leave empty
        */
-      // accessKeyId: "zeaq37",
-      // secretAccessKey: "eyw4ab",
+      accessKeyId: "zeaq37",
+      secretAccessKey: "eyw4ab",
     }
 /**
  * Locking the API Version

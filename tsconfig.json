@@ -12,9 +12,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "resolveJsonModule": true
     // "strict": true
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "**/__mocks__/*", "**/__tests__/*"],
   "include": ["**/*.ts", "**/*.tsx"]
 }

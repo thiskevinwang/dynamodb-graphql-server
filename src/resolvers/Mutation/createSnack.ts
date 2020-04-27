@@ -2,15 +2,22 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { PAGES } from "../index"
+import { upperCamelCase } from "../../utils"
+import { TABLE_NAMES } from "../"
 
-export const createPage: ResolverFn = async (
+type CreateSnackArgs = {
+  category: string
+  name: string
+  tastes: string[]
+  textures: string[]
+  imageUrls: string[]
+}
+export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
   obj,
-  args,
+  { category, name, tastes, textures, imageUrls },
   context,
   { fieldName, parentType }
 ) => {
-  const { id, location } = args
   const { docClient } = context
 
   /**
@@ -18,10 +25,15 @@ export const createPage: ResolverFn = async (
    * @see https://stackoverflow.com/a/46531548/9823455
    */
   const params: DynamoDB.DocumentClient.PutItemInput = {
-    TableName: PAGES,
+    TableName: TABLE_NAMES.Snacks,
     Item: {
-      id,
-      location,
+      PK: `Snack_${upperCamelCase(category)}`,
+      SK: `Name_${upperCamelCase(name)}`,
+      DisplayName: name,
+      Tastes: tastes?.map(e => upperCamelCase(e)) ?? [],
+      Textures: textures?.map(e => upperCamelCase(e)) ?? [],
+      ImageUrls: imageUrls ?? [],
+      Rating: 0,
     },
     /**
      * ConditionExpression
@@ -39,7 +51,7 @@ export const createPage: ResolverFn = async (
      * Logical operators: ` AND | OR | NOT`
      *
      * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html
-     * */
+     */
     // ConditionExpression: "#location <> :location", // put succeed if # !== :
 
     /**

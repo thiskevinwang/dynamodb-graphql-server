@@ -2,9 +2,7 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { PAGES } from "../index"
-
-export const createPagesTable: ResolverFn = async (
+export const createMoviesTable: ResolverFn = async (
   obj,
   args,
   context,
@@ -13,14 +11,14 @@ export const createPagesTable: ResolverFn = async (
   const { dynamoDb } = context
 
   const params: DynamoDB.CreateTableInput = {
-    TableName: PAGES,
+    TableName: "Movies",
     KeySchema: [
-      { AttributeName: "id", KeyType: "HASH" }, // partition key
-      { AttributeName: "location", KeyType: "RANGE" }, // sort key
+      { AttributeName: "year", KeyType: "HASH" }, // Partition key
+      { AttributeName: "title", KeyType: "RANGE" }, // Sort key
     ],
     AttributeDefinitions: [
-      { AttributeName: "id", AttributeType: "N" },
-      { AttributeName: "location", AttributeType: "S" },
+      { AttributeName: "year", AttributeType: "N" },
+      { AttributeName: "title", AttributeType: "S" },
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
@@ -46,7 +44,7 @@ export const createPagesTable: ResolverFn = async (
    * DELETE
    */
   return dynamoDb
-    .deleteTable({ TableName: PAGES })
+    .deleteTable({ TableName: "Movies" })
     .promise()
     .then(res => {
       console.log("res", res.TableDescription)
