@@ -85,6 +85,8 @@ export const typeDefs = gql`
     Textures: [String]
     Rating: Int
     ImageUrls: [String]
+    Revision: Int
+    UpdatedAt: Date
   }
 
   type Mutation {
