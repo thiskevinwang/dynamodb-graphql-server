@@ -2,7 +2,7 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { TABLE_NAMES } from "../"
+import { TABLE_NAMES } from "../.."
 
 type QuerySnackArgs = {
   category: string
