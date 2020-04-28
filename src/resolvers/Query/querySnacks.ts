@@ -20,6 +20,7 @@ export const querySnacks: ResolverFn<any, QuerySnackArgs> = async (
       "#PK": "PK",
       "#SK": "SK",
     },
+
     ExpressionAttributeValues: {
       ":pk": `Snack_${category}`,
       ":sk": `Name_`,

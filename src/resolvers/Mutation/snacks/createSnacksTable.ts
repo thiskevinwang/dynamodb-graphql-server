@@ -2,7 +2,7 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { TABLE_NAMES } from "../"
+import { TABLE_NAMES } from "../.."
 
 export const createSnacksTable: ResolverFn = async (
   obj,

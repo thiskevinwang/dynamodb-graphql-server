@@ -105,6 +105,13 @@ export const typeDefs = gql`
     incrementViews(location: String!, id: Int): PageAttributes
     seedMoviesTable: String @development
     trackIpVisits: TrackIpVisitsResponse
+    updateSnack(
+      category: String
+      name: String
+      tastes: [String]
+      textures: [String]
+      imageUrls: [String]
+    ): Snack
   }
 
   type Query {

@@ -2,17 +2,17 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { upperCamelCase } from "../../utils"
-import { TABLE_NAMES } from "../"
+import { upperCamelCase } from "../../../utils"
+import { TABLE_NAMES } from "../.."
 
-type CreateSnackArgs = {
+type UpdateSnackArgs = {
   category: string
   name: string
   tastes: string[]
   textures: string[]
   imageUrls: string[]
 }
-export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
+export const updateSnack: ResolverFn<any, UpdateSnackArgs> = async (
   obj,
   { category, name, tastes, textures, imageUrls },
   context,
@@ -20,20 +20,11 @@ export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
 ) => {
   const { docClient } = context
 
-  /**
-   * preventing overwrite
-   * @see https://stackoverflow.com/a/46531548/9823455
-   */
-  const params: DynamoDB.DocumentClient.PutItemInput = {
+  const params: DynamoDB.DocumentClient.UpdateItemInput = {
     TableName: TABLE_NAMES.Snacks,
-    Item: {
-      PK: `Snack_${upperCamelCase(category)}`,
-      SK: `Name_${upperCamelCase(name)}`,
-      DisplayName: name,
-      Tastes: tastes?.map(e => upperCamelCase(e)) ?? [],
-      Textures: textures?.map(e => upperCamelCase(e)) ?? [],
-      ImageUrls: imageUrls ?? [],
-      Rating: 0,
+    Key: {
+      PK: `Snack`,
+      SK: `SnackName_${upperCamelCase(name)}`,
     },
     /**
      * ConditionExpression
@@ -52,18 +43,34 @@ export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
      *
      * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html
      */
-    // ConditionExpression: "#location <> :location", // put succeed if # !== :
-
+    // ConditionExpression: "#PK <> :pk", // put succeed if # !== :
+    UpdateExpression:
+      "SET #DisplayName = :DisplayName, " +
+      "#Tastes = :Tastes, " +
+      "#Textures = :Textures, " +
+      "#ImageUrls = :ImageUrls, " +
+      "#Revision = Revision + :bump, " +
+      "#UpdatedAt = :now",
     /**
      * use this to avoid the error:
      * _"Invalid ConditionExpression: Attribute name is a reserved keyword;_
      */
-    // ExpressionAttributeNames: {
-    //   "#location": "location", // set # === Item.location
-    // },
-    // ExpressionAttributeValues: {
-    //   ":location": location, // set : === location
-    // },
+    ExpressionAttributeNames: {
+      "#DisplayName": "DisplayName",
+      "#Tastes": "Tastes",
+      "#Textures": "Textures",
+      "#ImageUrls": "ImageUrls",
+      "#Revision": "Revision",
+      "#UpdatedAt": "UpdatedAt",
+    },
+    ExpressionAttributeValues: {
+      ":DisplayName": name,
+      ":Tastes": tastes,
+      ":Textures": textures,
+      ":ImageUrls": imageUrls,
+      ":bump": 1,
+      ":now": new Date().toISOString(),
+    },
 
     /**
      * Required to return a value
@@ -71,11 +78,11 @@ export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
      *
      * https://stackoverflow.com/a/55171022/9823455
      */
-    ReturnValues: "ALL_OLD",
+    ReturnValues: "ALL_NEW",
   }
 
   return docClient
-    .put(params)
+    .update(params)
     .promise()
     .then(res => {
       console.info(parentType.name, fieldName, res)
