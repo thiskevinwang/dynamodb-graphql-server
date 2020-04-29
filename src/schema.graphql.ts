@@ -5,24 +5,6 @@ export const typeDefs = gql`
 
   directive @development on FIELD_DEFINITION
 
-  type PageAttributes {
-    views: Int
-    created_at: Date
-    updated_at: Date
-  }
-
-  type Page {
-    id: Int
-    location: String
-    attributes: PageAttributes
-  }
-
-  type Ip {
-    id: Int
-    ipAddress: String
-    visits: [Date]
-  }
-
   type ProvisionedThroughput {
     LastIncreaseDateTime: String
     LastDecreaseDateTime: String
@@ -57,72 +39,47 @@ export const typeDefs = gql`
     TableDescription: TableDescription
   }
 
-  type TrackIpVisitsResponse {
-    visits: [String]
-  }
-
-  type MovieInfo {
-    directors: [String]
-    release_date: Date
-    rating: Int
-    genres: [String]
-    image_url: String
-    plot: String
-    rank: Int
-    running_time_secs: Int
-    actors: [String]
-  }
-  type Movie {
-    year: Int
-    title: String
-    info: MovieInfo
-  }
-  type Snack {
+  type Product {
     PK: String
     SK: String
-    DisplayName: String
-    Tastes: [String]
-    Textures: [String]
-    Rating: Int
-    ImageUrls: [String]
-    Revision: Int
-    UpdatedAt: Date
+    createdAt: Date
+  }
+
+  type User {
+    PK: String
+    SK: String
+    username: String
+    fullname: String
+    email: String
+    createdAt: Date
+  }
+
+  type Vote {
+    PK: String
+    SK: String
+    productName: String
+    rating: Float
+    usernames: String
   }
 
   type Mutation {
-    createIpsTable: Table
-    createMoviesTable: Table @development
-    createPage(location: String, id: Int): Page
-    createPagesTable: Table
-    createSnack(
+    createProduct(
       category: String!
       name: String!
       tastes: [String]
       textures: [String]
       imageUrls: [String]
     ): Snack
-    createSnacksTable: Table
-    incrementViews(location: String!, id: Int): PageAttributes
-    seedMoviesTable: String @development
-    trackIpVisits: TrackIpVisitsResponse
-    updateSnack(
-      category: String
-      name: String
-      tastes: [String]
-      textures: [String]
-      imageUrls: [String]
-    ): Snack
+    createProductsTable: Table
+    createUser(username: String, fullname: String, email: String): User
+    seedVotes(snackName: String!, email: String): String @development
+    updateProduct(name: String): Product
   }
 
   type Query {
-    getIp: String!
-    getPage(location: String!, id: Int): Page
     listTables: [String]
-    queryMovies: [Movie] @development
-    queryPages: [Page]
-    querySnacks(category: String): [Snack]
-    scanIpsTable: [Ip] @development
-    scanPagesTable: [Page] @development
-    scanSnacksTable: [Snack] @development
+    queryProducts(category: String): [Product]
+    queryVotes(email: String, indexName: String): [Vote]
+    scanProductsTable: [Product] @development
   }
 `
