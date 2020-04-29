@@ -5,16 +5,12 @@ import type { ResolverFn } from "resolvers/ResolverFn"
 import { upperCamelCase } from "../../../utils"
 import { TABLE_NAMES } from "../.."
 
-type UpdateSnackArgs = {
-  category: string
+type Args = {
   name: string
-  tastes: string[]
-  textures: string[]
-  imageUrls: string[]
 }
-export const updateSnack: ResolverFn<any, UpdateSnackArgs> = async (
+export const updateProduct: ResolverFn<any, Args> = async (
   obj,
-  { category, name, tastes, textures, imageUrls },
+  { name },
   context,
   { fieldName, parentType }
 ) => {
@@ -23,8 +19,8 @@ export const updateSnack: ResolverFn<any, UpdateSnackArgs> = async (
   const params: DynamoDB.DocumentClient.UpdateItemInput = {
     TableName: TABLE_NAMES.Snacks,
     Key: {
-      PK: `Snack`,
-      SK: `SnackName_${upperCamelCase(name)}`,
+      PK: `PRODUCT#${name}`,
+      SK: `#PRODUCT#${name}`,
     },
     /**
      * ConditionExpression
@@ -44,31 +40,15 @@ export const updateSnack: ResolverFn<any, UpdateSnackArgs> = async (
      * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html
      */
     // ConditionExpression: "#PK <> :pk", // put succeed if # !== :
-    UpdateExpression:
-      "SET #DisplayName = :DisplayName, " +
-      "#Tastes = :Tastes, " +
-      "#Textures = :Textures, " +
-      "#ImageUrls = :ImageUrls, " +
-      "#Revision = Revision + :bump, " +
-      "#UpdatedAt = :now",
+    UpdateExpression: "SET #UpdatedAt = :now",
     /**
      * use this to avoid the error:
      * _"Invalid ConditionExpression: Attribute name is a reserved keyword;_
      */
     ExpressionAttributeNames: {
-      "#DisplayName": "DisplayName",
-      "#Tastes": "Tastes",
-      "#Textures": "Textures",
-      "#ImageUrls": "ImageUrls",
-      "#Revision": "Revision",
-      "#UpdatedAt": "UpdatedAt",
+      "#UpdatedAt": "updatedAt",
     },
     ExpressionAttributeValues: {
-      ":DisplayName": name,
-      ":Tastes": tastes,
-      ":Textures": textures,
-      ":ImageUrls": imageUrls,
-      ":bump": 1,
       ":now": new Date().toISOString(),
     },
 

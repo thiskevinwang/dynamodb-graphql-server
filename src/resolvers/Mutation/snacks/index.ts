@@ -1,3 +1,5 @@
-export { createSnack } from "./createSnack"
-export { createSnacksTable } from "./createSnacksTable"
-export { updateSnack } from "./updateSnack"
+export { createProduct } from "./createProduct"
+export { createUser } from "./createUser"
+export { createTable } from "./createTable"
+export { updateProduct } from "./updateProduct"
+export { createVote } from "./createVote"

@@ -5,16 +5,13 @@ import type { ResolverFn } from "resolvers/ResolverFn"
 import { upperCamelCase } from "../../../utils"
 import { TABLE_NAMES } from "../.."
 
-type CreateSnackArgs = {
-  category: string
-  name: string
-  tastes: string[]
-  textures: string[]
-  imageUrls: string[]
+type CreateUserArgs = {
+  username: string
+  email: string
 }
-export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
+export const createUser: ResolverFn<any, CreateUserArgs> = async (
   obj,
-  { category, name, tastes, textures, imageUrls },
+  { username, email },
   context,
   { fieldName, parentType }
 ) => {
@@ -27,15 +24,10 @@ export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
   const params: DynamoDB.DocumentClient.PutItemInput = {
     TableName: TABLE_NAMES.Snacks,
     Item: {
-      PK: `Snack_${upperCamelCase(category)}`,
-      SK: `Name_${upperCamelCase(name)}`,
-      DisplayName: name,
-      Tastes: tastes?.map(e => upperCamelCase(e)) ?? [],
-      Textures: textures?.map(e => upperCamelCase(e)) ?? [],
-      ImageUrls: imageUrls ?? [],
-      Rating: 0,
-      Revision: 1,
-      UpdatedAt: new Date().toISOString(),
+      PK: `User#${username}}`,
+      SK: `#Profile#${username}`,
+      username,
+      email,
     },
     /**
      * ConditionExpression
@@ -54,7 +46,7 @@ export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
      *
      * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html
      */
-    ConditionExpression: "#PK <> :pk and #SK <> :sk", // put succeed if # !== :
+    ConditionExpression: "#PK <> :pk", // put succeed if # !== :
 
     /**
      * use this to avoid the error:
@@ -62,11 +54,9 @@ export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
      */
     ExpressionAttributeNames: {
       "#PK": "PK", // set # === Item.location
-      "#SK": "SK",
     },
     ExpressionAttributeValues: {
-      ":pk": `Snack_${upperCamelCase(category)}`,
-      ":sk": `Name_${upperCamelCase(name)}`,
+      ":pk": `USER#${username}`,
     },
 
     /**

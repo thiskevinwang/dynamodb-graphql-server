@@ -1,2 +1,2 @@
-export { querySnacks } from "./querySnacks"
-export { scanSnacksTable } from "./scanSnacksTable"
+export { queryProducts } from "./queryProducts"
+export { scanProductsTable } from "./scanProductsTable"

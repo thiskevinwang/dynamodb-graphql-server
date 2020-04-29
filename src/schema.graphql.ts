@@ -43,6 +43,7 @@ export const typeDefs = gql`
     PK: String
     SK: String
     createdAt: Date
+    updatedAt: Date
   }
 
   type User {
@@ -52,6 +53,7 @@ export const typeDefs = gql`
     fullname: String
     email: String
     createdAt: Date
+    updatedAt: Date
   }
 
   type Vote {
@@ -59,26 +61,22 @@ export const typeDefs = gql`
     SK: String
     productName: String
     rating: Float
-    usernames: String
+    username: String
+    createdAt: Date
+    updatedAt: Date
   }
 
   type Mutation {
-    createProduct(
-      category: String!
-      name: String!
-      tastes: [String]
-      textures: [String]
-      imageUrls: [String]
-    ): Snack
-    createProductsTable: Table
-    createUser(username: String, fullname: String, email: String): User
-    seedVotes(snackName: String!, email: String): String @development
+    createProduct(name: String!): Product
+    createTable: Table
+    createUser(username: String, email: String): User
+    createVote(productName: String!, email: String): Vote @development
     updateProduct(name: String): Product
   }
 
   type Query {
     listTables: [String]
-    queryProducts(category: String): [Product]
+    queryProducts: [Product]
     queryVotes(email: String, indexName: String): [Vote]
     scanProductsTable: [Product] @development
   }

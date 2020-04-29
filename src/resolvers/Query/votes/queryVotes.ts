@@ -4,30 +4,33 @@ import type { ResolverFn } from "resolvers/ResolverFn"
 
 import { TABLE_NAMES } from "../.."
 
-type QuerySnackArgs = {
-  category: string
+type QueryVotesArgs = {
+  email: string
+  indexName: string
 }
-export const querySnacks: ResolverFn<any, QuerySnackArgs> = async (
+export const queryVotes: ResolverFn<any, QueryVotesArgs> = async (
   obj,
-  { category },
+  { email, indexName },
   { docClient },
   { fieldName, parentType }
 ) => {
   const params: DocumentClient.QueryInput = {
     TableName: TABLE_NAMES.Snacks,
-    KeyConditionExpression: "#PK = :pk and begins_with(#SK, :sk)",
+    KeyConditionExpression: "#PK = :pk",
+    // KeyConditionExpression: "#PK = :pk and #SK = :sk",
     ExpressionAttributeNames: {
       "#PK": "PK",
-      "#SK": "SK",
+      // "#SK": "SK",
     },
 
     ExpressionAttributeValues: {
-      ":pk": `Snack_${category}`,
-      ":sk": `Name_`,
+      ":pk": `Vote#${email}`,
+      // ":sk": email,
       // ":value": "Z",
     },
     // ProjectionExpression: "PK, Tastes",
-    Limit: 10,
+    // Limit: 10,
+    IndexName: indexName,
   }
   return docClient
     .query(params)

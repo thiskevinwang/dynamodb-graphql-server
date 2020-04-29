@@ -1,0 +1,1 @@
+export { queryVotes } from "./queryVotes"
