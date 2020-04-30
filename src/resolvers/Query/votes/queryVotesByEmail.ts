@@ -4,27 +4,31 @@ import type { ResolverFn } from "resolvers/ResolverFn"
 
 import { TABLE_NAMES } from "../.."
 
-type Args = {}
-export const queryProducts: ResolverFn<any, Args> = async (
+type Args = {
+  email: string
+}
+export const queryVotesByEmail: ResolverFn<any, Args> = async (
   obj,
-  {},
+  { email },
   { docClient },
   { fieldName, parentType }
 ) => {
   const params: DocumentClient.QueryInput = {
     TableName: TABLE_NAMES.Snacks,
-    KeyConditionExpression: "SK = :sk",
+    KeyConditionExpression: "PK = :pk AND begins_with (SK, :sk) ",
+    // KeyConditionExpression: "#PK = :pk and #SK = :sk",
     // ExpressionAttributeNames: {
     //   "#PK": "PK",
     //   "#SK": "SK",
-    // }
+    // },
     ExpressionAttributeValues: {
-      ":sk": `#PRODUCT`,
+      ":pk": `USER#${email}`,
+      ":sk": `VOTE#`,
       // ":value": "Z",
     },
     // ProjectionExpression: "PK, Tastes",
-    IndexName: "GSI_InvertedIndex",
-    Limit: 10,
+    // Limit: 10,
+    // IndexName: indexName,
   }
   return docClient
     .query(params)

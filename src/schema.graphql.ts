@@ -44,40 +44,44 @@ export const typeDefs = gql`
     SK: String
     createdAt: Date
     updatedAt: Date
+    productName: String
   }
 
   type User {
     PK: String
     SK: String
+    createdAt: Date
+    updatedAt: Date
     username: String
     fullname: String
     email: String
-    createdAt: Date
-    updatedAt: Date
   }
 
   type Vote {
     PK: String
     SK: String
+    createdAt: Date
+    updatedAt: Date
     productName: String
     rating: Float
     username: String
-    createdAt: Date
-    updatedAt: Date
   }
 
   type Mutation {
     createProduct(name: String!): Product
     createTable: Table
-    createUser(username: String, email: String): User
-    createVote(productName: String!, email: String): Vote @development
-    updateProduct(name: String): Product
+    createUser(username: String!, email: String!): User
+    createVote(productName: String!, username: String!): Vote
+    updateProduct(productName: String!): Product
   }
 
   type Query {
     listTables: [String]
     queryProducts: [Product]
-    queryVotes(email: String, indexName: String): [Vote]
+    queryProductsByName(name: String): [Product]
+    queryUsers: [User]
+    queryVotesByEmail(email: String): [Vote]
+    queryVotesByProduct(name: String): [Vote]
     scanProductsTable: [Product] @development
   }
 `

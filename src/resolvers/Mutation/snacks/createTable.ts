@@ -21,18 +21,40 @@ export const createTable: ResolverFn = async (
     AttributeDefinitions: [
       { AttributeName: "PK", AttributeType: "S" },
       { AttributeName: "SK", AttributeType: "S" },
-      { AttributeName: "UserId", AttributeType: "S" },
+      { AttributeName: "ProductVote", AttributeType: "S" },
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
       WriteCapacityUnits: 5,
     },
-    LocalSecondaryIndexes: [
+    // LocalSecondaryIndexes: [
+    //   {
+    //     IndexName: "LSI_ProductVote",
+    //     KeySchema: [
+    //       // Local Secondary indices must have the
+    //       // same hash key as the main table
+    //       { AttributeName: "PK", KeyType: "HASH" },
+    //       { AttributeName: "productName", KeyType: "RANGE" },
+    //     ],
+    //     /**
+    //      * https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Projection.html
+    //      */
+    //     Projection: {
+    //       // KEYS_ONLY | ALL | INCLUDE
+    //       ProjectionType: "ALL",
+    //       // ProjectionType: "INCLUDE",
+    //       // NonKeyAttributes: ["Email", "Rating", "SnackName"],
+    //     },
+    //   },
+    // ],
+    GlobalSecondaryIndexes: [
       {
-        IndexName: "InvertedIndex",
+        IndexName: "GSI_ProductVote",
         KeySchema: [
-          { AttributeName: "PK", KeyType: "HASH" },
-          { AttributeName: "UserId", KeyType: "RANGE" },
+          // Local Secondary indices must have the
+          // same hash key as the main table
+          { AttributeName: "ProductVote", KeyType: "HASH" },
+          // { AttributeName: "productName", KeyType: "RANGE" },
         ],
         /**
          * https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Projection.html
@@ -42,6 +64,23 @@ export const createTable: ResolverFn = async (
           ProjectionType: "ALL",
           // ProjectionType: "INCLUDE",
           // NonKeyAttributes: ["Email", "Rating", "SnackName"],
+        },
+        // No provisioned throughput specified
+        // for the global secondary index
+        ProvisionedThroughput: {
+          ReadCapacityUnits: 5,
+          WriteCapacityUnits: 5,
+        },
+      },
+      {
+        IndexName: "GSI_InvertedIndex",
+        KeySchema: [{ AttributeName: "SK", KeyType: "HASH" }],
+        Projection: {
+          ProjectionType: "ALL",
+        },
+        ProvisionedThroughput: {
+          ReadCapacityUnits: 5,
+          WriteCapacityUnits: 5,
         },
       },
     ],

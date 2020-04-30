@@ -7,11 +7,11 @@ import { TABLE_NAMES } from "../.."
 
 type Args = {
   productName: string
-  email: string
+  username: string
 }
 export const createVote: ResolverFn<any, Args> = async (
   obj,
-  { productName, email },
+  { productName, username },
   context,
   { fieldName, parentType }
 ) => {
@@ -20,17 +20,17 @@ export const createVote: ResolverFn<any, Args> = async (
   const params: DynamoDB.DocumentClient.PutItemInput = {
     TableName: TABLE_NAMES.Snacks,
     Item: {
-      PK: `USER#${email}`,
-      SK: `PRODUCT#${productName}`,
-      email,
+      PK: `USER#${username}`,
+      SK: `VOTE#${productName}`,
+      username,
       rating: _.random(0, 5, true).toFixed(1),
       productName,
       createdAt: new Date().toISOString(),
     },
     ConditionExpression: "PK <> :PK AND SK <> :SK",
     ExpressionAttributeValues: {
-      ":PK": `USER#${email}`,
-      ":SK": `PRODUCT#${productName}`,
+      ":PK": `USER#${username}`,
+      ":SK": `VOTE#${productName}`,
     },
     ReturnValues: "ALL_OLD",
   }

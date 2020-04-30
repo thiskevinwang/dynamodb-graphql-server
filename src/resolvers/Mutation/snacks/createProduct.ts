@@ -24,8 +24,9 @@ export const createProduct: ResolverFn<any, Args> = async (
     TableName: TABLE_NAMES.Snacks,
     Item: {
       PK: `PRODUCT#${name}`,
-      SK: `#PRODUCT#${name}`,
+      SK: `#PRODUCT`,
       createdAt: new Date().toISOString(),
+      productName: name,
     },
     /**
      * ConditionExpression
@@ -54,7 +55,7 @@ export const createProduct: ResolverFn<any, Args> = async (
       "#PK": "PK", // set # === Item.location
     },
     ExpressionAttributeValues: {
-      ":pk": `Product#${name}`,
+      ":pk": `PRODUCT#${name}`,
     },
 
     /**

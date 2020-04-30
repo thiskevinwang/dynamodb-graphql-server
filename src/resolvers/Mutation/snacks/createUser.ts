@@ -24,10 +24,11 @@ export const createUser: ResolverFn<any, CreateUserArgs> = async (
   const params: DynamoDB.DocumentClient.PutItemInput = {
     TableName: TABLE_NAMES.Snacks,
     Item: {
-      PK: `User#${username}}`,
-      SK: `#Profile#${username}`,
+      PK: `USER#${username}`,
+      SK: `#USER`,
       username,
       email,
+      createdAt: new Date().toISOString(),
     },
     /**
      * ConditionExpression

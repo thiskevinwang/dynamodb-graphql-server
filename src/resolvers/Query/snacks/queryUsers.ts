@@ -5,7 +5,7 @@ import type { ResolverFn } from "resolvers/ResolverFn"
 import { TABLE_NAMES } from "../.."
 
 type Args = {}
-export const queryProducts: ResolverFn<any, Args> = async (
+export const queryUsers: ResolverFn<any, Args> = async (
   obj,
   {},
   { docClient },
@@ -19,7 +19,7 @@ export const queryProducts: ResolverFn<any, Args> = async (
     //   "#SK": "SK",
     // }
     ExpressionAttributeValues: {
-      ":sk": `#PRODUCT`,
+      ":sk": `#USER`,
       // ":value": "Z",
     },
     // ProjectionExpression: "PK, Tastes",
