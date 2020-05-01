@@ -5,11 +5,11 @@ import type { ResolverFn } from "resolvers/ResolverFn"
 import { TABLE_NAMES } from "../.."
 
 type Args = {
-  name: string
+  productName: string
 }
 export const queryVotesByProduct: ResolverFn<any, Args> = async (
   obj,
-  { name },
+  { productName },
   { docClient },
   { fieldName, parentType }
 ) => {
@@ -22,7 +22,7 @@ export const queryVotesByProduct: ResolverFn<any, Args> = async (
     //   "#SK": "SK",
     // },
     ExpressionAttributeValues: {
-      ":pk": `VOTE#${name}`,
+      ":pk": `VOTE#${productName}`,
       // ":sk": email,
       // ":value": "Z",
     },

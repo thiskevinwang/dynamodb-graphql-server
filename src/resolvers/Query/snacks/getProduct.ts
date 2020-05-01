@@ -5,33 +5,25 @@ import type { ResolverFn } from "resolvers/ResolverFn"
 import { TABLE_NAMES } from "../.."
 
 type Args = { productName: string }
-export const queryProductsByName: ResolverFn<any, Args> = async (
+export const getProduct: ResolverFn<any, Args> = async (
   obj,
   { productName },
   { docClient },
   { fieldName, parentType }
 ) => {
-  const params: DocumentClient.QueryInput = {
+  const params: DocumentClient.GetItemInput = {
     TableName: TABLE_NAMES.Snacks,
-    KeyConditionExpression: "PK = :pk and begins_with(SK, :sk)",
-    // ExpressionAttributeNames: {
-    //   "#PK": "PK",
-    //   "#SK": "SK",
-    // }
-    ExpressionAttributeValues: {
-      ":pk": `PRODUCT#${productName}`,
-      ":sk": `#PRODUCT`,
-      // ":value": "Z",
+    Key: {
+      PK: `PRODUCT#${productName}`,
+      SK: "#PRODUCT",
     },
-    // ProjectionExpression: "PK, Tastes",
-    Limit: 10,
   }
   return docClient
-    .query(params)
+    .get(params)
     .promise()
     .then(res => {
       console.info(parentType.name, fieldName, res)
-      return res.Items
+      return res.Item
     })
     .catch(err => {
       console.error(parentType.name, fieldName, err.message)

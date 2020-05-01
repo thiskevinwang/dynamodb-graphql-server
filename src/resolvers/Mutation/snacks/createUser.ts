@@ -47,7 +47,7 @@ export const createUser: ResolverFn<any, CreateUserArgs> = async (
      *
      * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html
      */
-    ConditionExpression: "#PK <> :pk", // put succeed if # !== :
+    ConditionExpression: "#PK <> :pk AND #email <> :email", // put succeed if # !== :
 
     /**
      * use this to avoid the error:
@@ -55,9 +55,11 @@ export const createUser: ResolverFn<any, CreateUserArgs> = async (
      */
     ExpressionAttributeNames: {
       "#PK": "PK", // set # === Item.location
+      "#email": "email",
     },
     ExpressionAttributeValues: {
       ":pk": `USER#${username}`,
+      ":email": email,
     },
 
     /**

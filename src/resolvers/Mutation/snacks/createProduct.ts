@@ -6,11 +6,11 @@ import { upperCamelCase } from "../../../utils"
 import { TABLE_NAMES } from "../.."
 
 type Args = {
-  name: string
+  productName: string
 }
 export const createProduct: ResolverFn<any, Args> = async (
   obj,
-  { name },
+  { productName },
   context,
   { fieldName, parentType }
 ) => {
@@ -23,10 +23,10 @@ export const createProduct: ResolverFn<any, Args> = async (
   const params: DynamoDB.DocumentClient.PutItemInput = {
     TableName: TABLE_NAMES.Snacks,
     Item: {
-      PK: `PRODUCT#${name}`,
+      PK: `PRODUCT#${productName}`,
       SK: `#PRODUCT`,
       createdAt: new Date().toISOString(),
-      productName: name,
+      productName,
     },
     /**
      * ConditionExpression
@@ -55,7 +55,7 @@ export const createProduct: ResolverFn<any, Args> = async (
       "#PK": "PK", // set # === Item.location
     },
     ExpressionAttributeValues: {
-      ":pk": `PRODUCT#${name}`,
+      ":pk": `PRODUCT#${productName}`,
     },
 
     /**
