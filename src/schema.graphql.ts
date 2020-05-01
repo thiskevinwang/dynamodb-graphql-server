@@ -68,7 +68,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    createProduct(name: String!): Product
+    createProduct(productName: String!): Product
     createTable: Table
     createUser(username: String!, email: String!): User
     createVote(productName: String!, username: String!): Vote
@@ -77,11 +77,13 @@ export const typeDefs = gql`
 
   type Query {
     listTables: [String]
+    getProduct(productName: String!): Product
+    getUser(username: String!, email: String!): User
     queryProducts: [Product]
-    queryProductsByName(name: String): [Product]
+    queryProductsByName(productName: String): [Product]
     queryUsers: [User]
     queryVotesByEmail(email: String): [Vote]
-    queryVotesByProduct(name: String): [Vote]
+    queryVotesByProduct(productName: String): [Vote]
     scanProductsTable: [Product] @development
   }
 `
