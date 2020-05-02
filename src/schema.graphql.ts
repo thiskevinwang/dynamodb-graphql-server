@@ -72,6 +72,9 @@ export const typeDefs = gql`
     objectUrl: String!
   }
 
+  type AuthPayload {
+    token: String!
+  }
   type Mutation {
     createProduct(productName: String!): Product
     createTable: Table
@@ -79,6 +82,14 @@ export const typeDefs = gql`
     createVote(productName: String!, username: String!): Vote
     updateProduct(productName: String!): Product
     #
+    login(email: String!, password: String!, username: String!): AuthPayload
+    signup(
+      email: String!
+      password: String!
+      username: String!
+      firstName: String!
+      lastName: String!
+    ): AuthPayload
     s3GetSignedPutObjectUrl(
       fileName: String!
       """
