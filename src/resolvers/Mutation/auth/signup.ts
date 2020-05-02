@@ -5,7 +5,6 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 import { APP_SECRET } from "../../../utils"
-
 import { TABLE_NAMES } from "../.."
 
 type Args = {
@@ -21,13 +20,14 @@ type User = {
   createdAt: Date
   updatedAt: Date
   username: string
-  fullname: string
+  firstName: string
+  lastName: string
   email: string
 }
-type AuthPayload = {
+type Response = {
   token: string
 }
-export const signup: ResolverFn<AuthPayload, Args> = async (
+export const signup: ResolverFn<Response, Args> = async (
   parent,
   { password, username, firstName, lastName, email },
   { docClient },
@@ -103,7 +103,10 @@ export const signup: ResolverFn<AuthPayload, Args> = async (
         throw err
       })
 
-    const token = jwt.sign({ userId: params.Item.PK }, APP_SECRET)
+    const token = jwt.sign(
+      { email: params.Item.email, username: params.Item.username },
+      APP_SECRET
+    )
 
     // Do we want to await here?
     await fetch(process.env.API_GATEWAY, {
@@ -117,9 +120,7 @@ export const signup: ResolverFn<AuthPayload, Args> = async (
       body: JSON.stringify(params),
     })
 
-    return {
-      token,
-    }
+    return { token }
   } catch (err) {
     throw new Error(err)
   }

@@ -1,2 +1,2 @@
-export { getUserId, APP_SECRET } from "./getUserId"
+export { getAuthPayload, APP_SECRET } from "./getAuthPayload"
 export { upperCamelCase } from "./upperCamelCase"

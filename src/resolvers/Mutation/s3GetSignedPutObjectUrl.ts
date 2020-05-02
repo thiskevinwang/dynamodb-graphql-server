@@ -1,5 +1,5 @@
 import type { ResolverFn } from "resolvers/ResolverFn"
-import { getUserId } from "../../utils"
+import { getAuthPayload } from "../../utils"
 
 type Args = {
   fileName: string
@@ -20,8 +20,8 @@ export const s3GetSignedPutObjectUrl: ResolverFn<Response, Args> = async (
   context,
   info
 ) => {
-  const userId = getUserId(context)
-  if (!userId) throw new Error("You're not allowed to do that")
+  const { username, email } = getAuthPayload(context)
+  if (!username || !email) throw new Error("You're not allowed to do that")
   if (fileSize > 10000000) throw new Error("File size cannot exceed 10mb")
   const { s3 } = context
 
