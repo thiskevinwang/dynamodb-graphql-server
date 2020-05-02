@@ -2,7 +2,6 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { upperCamelCase } from "../../../utils"
 import { TABLE_NAMES } from "../.."
 
 type CreateUserArgs = {
