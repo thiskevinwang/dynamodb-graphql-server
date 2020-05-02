@@ -1,7 +1,7 @@
 import { SchemaDirectiveVisitor } from "apollo-server"
 import { GraphQLField, defaultFieldResolver } from "graphql"
 
-import { getUserId } from "../utils"
+import { getAuthPayload } from "../utils"
 
 const AUTH_ERROR = "🔒 This field requires you to be authenticated"
 /**
@@ -16,7 +16,7 @@ export class AuthDirective extends SchemaDirectiveVisitor {
     field.resolve = async function (...args) {
       // Check Authorization Header
       const context = args[2]
-      getUserId(context)
+      getAuthPayload(context)
 
       // Business as usual
       const result = await resolve.apply(this, args)

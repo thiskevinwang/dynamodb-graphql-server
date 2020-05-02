@@ -14,6 +14,7 @@ type Args = {
 type Response = {
   token: string
 }
+
 export const login: ResolverFn<Response, Args> = async (
   parent,
   { password, email, username },
@@ -50,6 +51,6 @@ export const login: ResolverFn<Response, Args> = async (
   }
 
   return {
-    token: jwt.sign({ userId: user.PK }, APP_SECRET),
+    token: jwt.sign({ email: user.email, username: user.username }, APP_SECRET),
   }
 }

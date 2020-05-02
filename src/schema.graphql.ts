@@ -54,7 +54,8 @@ export const typeDefs = gql`
     createdAt: Date
     updatedAt: Date
     username: String
-    fullname: String
+    firstName: String
+    lastName: String
     email: String
   }
 
