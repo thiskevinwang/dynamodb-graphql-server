@@ -2,27 +2,28 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { PAGES } from "../index"
+import { TABLE_NAMES } from "../.."
 
-export const queryPages: ResolverFn = async (
+type Args = { productName: string }
+export const queryProductsByName: ResolverFn<any, Args> = async (
   obj,
-  args,
+  { productName },
   { docClient },
   { fieldName, parentType }
 ) => {
   const params: DocumentClient.QueryInput = {
-    TableName: PAGES,
-    KeyConditionExpression:
-      "#id = :id and #location between :letter1 and :letter2",
-    ExpressionAttributeNames: {
-      "#id": "id",
-      "#location": "location",
-    },
+    TableName: TABLE_NAMES.Snacks,
+    KeyConditionExpression: "PK = :pk and begins_with(SK, :sk)",
+    // ExpressionAttributeNames: {
+    //   "#PK": "PK",
+    //   "#SK": "SK",
+    // }
     ExpressionAttributeValues: {
-      ":id": 2,
-      ":letter1": "0",
-      ":letter2": "Z",
+      ":pk": `PRODUCT#${productName}`,
+      ":sk": `#PRODUCT`,
+      // ":value": "Z",
     },
+    // ProjectionExpression: "PK, Tastes",
     Limit: 10,
   }
   return docClient

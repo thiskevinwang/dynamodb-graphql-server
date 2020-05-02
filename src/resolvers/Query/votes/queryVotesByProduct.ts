@@ -2,31 +2,33 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { TABLE_NAMES } from "../"
+import { TABLE_NAMES } from "../.."
 
-type QuerySnackArgs = {
-  category: string
+type Args = {
+  productName: string
 }
-export const querySnacks: ResolverFn<any, QuerySnackArgs> = async (
+export const queryVotesByProduct: ResolverFn<any, Args> = async (
   obj,
-  { category },
+  { productName },
   { docClient },
   { fieldName, parentType }
 ) => {
   const params: DocumentClient.QueryInput = {
     TableName: TABLE_NAMES.Snacks,
-    KeyConditionExpression: "#PK = :pk and begins_with(#SK, :sk)",
-    ExpressionAttributeNames: {
-      "#PK": "PK",
-      "#SK": "SK",
-    },
+    KeyConditionExpression: "SK = :pk",
+    // KeyConditionExpression: "#PK = :pk and #SK = :sk",
+    // ExpressionAttributeNames: {
+    //   "#PK": "PK",
+    //   "#SK": "SK",
+    // },
     ExpressionAttributeValues: {
-      ":pk": `Snack_${category}`,
-      ":sk": `Name_`,
+      ":pk": `VOTE#${productName}`,
+      // ":sk": email,
       // ":value": "Z",
     },
     // ProjectionExpression: "PK, Tastes",
-    Limit: 10,
+    // Limit: 10,
+    IndexName: "GSI_InvertedIndex",
   }
   return docClient
     .query(params)

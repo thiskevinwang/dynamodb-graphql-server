@@ -2,19 +2,14 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { upperCamelCase } from "../../utils"
-import { TABLE_NAMES } from "../"
+import { TABLE_NAMES } from "../.."
 
-type CreateSnackArgs = {
-  category: string
-  name: string
-  tastes: string[]
-  textures: string[]
-  imageUrls: string[]
+type Args = {
+  productName: string
 }
-export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
+export const createProduct: ResolverFn<any, Args> = async (
   obj,
-  { category, name, tastes, textures, imageUrls },
+  { productName },
   context,
   { fieldName, parentType }
 ) => {
@@ -27,13 +22,10 @@ export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
   const params: DynamoDB.DocumentClient.PutItemInput = {
     TableName: TABLE_NAMES.Snacks,
     Item: {
-      PK: `Snack_${upperCamelCase(category)}`,
-      SK: `Name_${upperCamelCase(name)}`,
-      DisplayName: name,
-      Tastes: tastes?.map(e => upperCamelCase(e)) ?? [],
-      Textures: textures?.map(e => upperCamelCase(e)) ?? [],
-      ImageUrls: imageUrls ?? [],
-      Rating: 0,
+      PK: `PRODUCT#${productName}`,
+      SK: `#PRODUCT`,
+      createdAt: new Date().toISOString(),
+      productName,
     },
     /**
      * ConditionExpression
@@ -52,24 +44,26 @@ export const createSnack: ResolverFn<any, CreateSnackArgs> = async (
      *
      * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html
      */
-    // ConditionExpression: "#location <> :location", // put succeed if # !== :
+    ConditionExpression: "#PK <> :pk", // put succeed if # !== :
 
     /**
      * use this to avoid the error:
      * _"Invalid ConditionExpression: Attribute name is a reserved keyword;_
      */
-    // ExpressionAttributeNames: {
-    //   "#location": "location", // set # === Item.location
-    // },
-    // ExpressionAttributeValues: {
-    //   ":location": location, // set : === location
-    // },
+    ExpressionAttributeNames: {
+      "#PK": "PK", // set # === Item.location
+    },
+    ExpressionAttributeValues: {
+      ":pk": `PRODUCT#${productName}`,
+    },
 
     /**
      * Required to return a value
      * NONE | ALL_OLD | UPDATED_OLD | ALL_NEW | UPDATED_NEW
      *
      * https://stackoverflow.com/a/55171022/9823455
+     *
+     * ⚠️ `put` only allows "NONE" | "ALL_OLD"
      */
     ReturnValues: "ALL_OLD",
   }

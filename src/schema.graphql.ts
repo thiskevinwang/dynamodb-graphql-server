@@ -4,24 +4,7 @@ export const typeDefs = gql`
   scalar Date
 
   directive @development on FIELD_DEFINITION
-
-  type PageAttributes {
-    views: Int
-    created_at: Date
-    updated_at: Date
-  }
-
-  type Page {
-    id: Int
-    location: String
-    attributes: PageAttributes
-  }
-
-  type Ip {
-    id: Int
-    ipAddress: String
-    visits: [Date]
-  }
+  directive @auth on FIELD_DEFINITION
 
   type ProvisionedThroughput {
     LastIncreaseDateTime: String
@@ -57,63 +40,77 @@ export const typeDefs = gql`
     TableDescription: TableDescription
   }
 
-  type TrackIpVisitsResponse {
-    visits: [String]
-  }
-
-  type MovieInfo {
-    directors: [String]
-    release_date: Date
-    rating: Int
-    genres: [String]
-    image_url: String
-    plot: String
-    rank: Int
-    running_time_secs: Int
-    actors: [String]
-  }
-  type Movie {
-    year: Int
-    title: String
-    info: MovieInfo
-  }
-  type Snack {
-    PK: String
+  type Product {
+    PK: ID
     SK: String
-    DisplayName: String
-    Tastes: [String]
-    Textures: [String]
-    Rating: Int
-    ImageUrls: [String]
+    createdAt: Date
+    updatedAt: Date
+    productName: String
   }
 
+  type User {
+    PK: ID
+    SK: String
+    createdAt: Date
+    updatedAt: Date
+    username: String
+    fullname: String
+    email: String
+  }
+
+  type Vote {
+    PK: ID
+    SK: String
+    createdAt: Date
+    updatedAt: Date
+    productName: String
+    rating: Float
+    username: String
+  }
+
+  type S3Payload {
+    signedPutObjectUrl: String!
+    objectUrl: String!
+  }
+
+  type AuthPayload {
+    token: String!
+  }
   type Mutation {
-    createIpsTable: Table
-    createMoviesTable: Table @development
-    createPage(location: String, id: Int): Page
-    createPagesTable: Table
-    createSnack(
-      category: String!
-      name: String!
-      tastes: [String]
-      textures: [String]
-      imageUrls: [String]
-    ): Snack
-    createSnacksTable: Table
-    incrementViews(location: String!, id: Int): PageAttributes
-    seedMoviesTable: String @development
-    trackIpVisits: TrackIpVisitsResponse
+    createProduct(productName: String!): Product @auth
+    createTable: Table @development @auth
+    createUser(username: String!, email: String!): User @development
+    createVote(productName: String!, username: String!): Vote @auth
+    updateProduct(productName: String!): Product @auth
+    #
+    login(email: String!, password: String!, username: String!): AuthPayload
+    signup(
+      email: String!
+      password: String!
+      username: String!
+      firstName: String!
+      lastName: String!
+    ): AuthPayload
+    s3GetSignedPutObjectUrl(
+      fileName: String!
+      """
+      A standard MIME type describing thhe format of the object data.
+      jpg, jpeg, png, etc.
+      """
+      fileType: String!
+      fileSize: Int!
+    ): S3Payload! @auth
   }
 
   type Query {
-    getIp: String!
-    getPage(location: String!, id: Int): Page
-    listTables: [String]
-    queryMovies: [Movie] @development
-    queryPages: [Page]
-    querySnacks(category: String): [Snack]
-    scanIpsTable: [Ip] @development
-    scanPagesTable: [Page] @development
-    scanSnacksTable: [Snack] @development
+    listTables: [String] @auth
+    getProduct(productName: String!): Product
+    getUser(username: String!, email: String!): User
+    queryProducts: [Product]
+    queryProductsByName(productName: String): [Product]
+    queryUsers: [User]
+    queryVotesByEmail(email: String): [Vote]
+    queryVotesByProduct(productName: String): [Vote]
+    scanProductsTable: [Product] @development @auth
   }
 `

@@ -2,15 +2,18 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { PAGES } from "../index"
+import { TABLE_NAMES } from "../.."
 
-export const createPage: ResolverFn = async (
+type CreateUserArgs = {
+  username: string
+  email: string
+}
+export const createUser: ResolverFn<any, CreateUserArgs> = async (
   obj,
-  args,
+  { username, email },
   context,
   { fieldName, parentType }
 ) => {
-  const { id, location } = args
   const { docClient } = context
 
   /**
@@ -18,10 +21,13 @@ export const createPage: ResolverFn = async (
    * @see https://stackoverflow.com/a/46531548/9823455
    */
   const params: DynamoDB.DocumentClient.PutItemInput = {
-    TableName: PAGES,
+    TableName: TABLE_NAMES.Snacks,
     Item: {
-      id,
-      location,
+      PK: `USER#${username}`,
+      SK: `#USER`,
+      username,
+      email,
+      createdAt: new Date().toISOString(),
     },
     /**
      * ConditionExpression
@@ -39,25 +45,29 @@ export const createPage: ResolverFn = async (
      * Logical operators: ` AND | OR | NOT`
      *
      * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html
-     * */
-    // ConditionExpression: "#location <> :location", // put succeed if # !== :
+     */
+    ConditionExpression: "#PK <> :pk AND #email <> :email", // put succeed if # !== :
 
     /**
      * use this to avoid the error:
      * _"Invalid ConditionExpression: Attribute name is a reserved keyword;_
      */
-    // ExpressionAttributeNames: {
-    //   "#location": "location", // set # === Item.location
-    // },
-    // ExpressionAttributeValues: {
-    //   ":location": location, // set : === location
-    // },
+    ExpressionAttributeNames: {
+      "#PK": "PK", // set # === Item.location
+      "#email": "email",
+    },
+    ExpressionAttributeValues: {
+      ":pk": `USER#${username}`,
+      ":email": email,
+    },
 
     /**
      * Required to return a value
      * NONE | ALL_OLD | UPDATED_OLD | ALL_NEW | UPDATED_NEW
      *
      * https://stackoverflow.com/a/55171022/9823455
+     *
+     * ⚠️ `put` only allows "NONE" | "ALL_OLD"
      */
     ReturnValues: "ALL_OLD",
   }

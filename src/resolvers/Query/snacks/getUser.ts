@@ -2,31 +2,25 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { PAGES } from "../index"
+import { TABLE_NAMES } from "../.."
 
-export const getPage: ResolverFn = async (
+/**
+ * @TODO email is unused for now
+ */
+type Args = { email: string; username: string }
+export const getUser: ResolverFn<any, Args> = async (
   obj,
-  args,
-  context,
+  { email, username },
+  { docClient },
   { fieldName, parentType }
 ) => {
-  const { id, location } = args
-  const { docClient } = context
-
   const params: DocumentClient.GetItemInput = {
-    TableName: PAGES,
+    TableName: TABLE_NAMES.Snacks,
     Key: {
-      id,
-      location,
+      PK: `USER#${username}`,
+      SK: "#USER",
     },
   }
-  /**
-   * In order to get a return value from `docClient`, you need to call
-   * docClient.get(params).promise.
-   *
-   * But if you specify a callback too - docClient.get(params, (err,data) => {...}).promise()
-   * This gets evaluated TWICE.
-   */
   return docClient
     .get(params)
     .promise()

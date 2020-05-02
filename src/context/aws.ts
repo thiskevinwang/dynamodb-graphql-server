@@ -56,4 +56,10 @@ const dynamoDb = new AWS.DynamoDB(options)
  */
 const docClient = new AWS.DynamoDB.DocumentClient(options)
 
-export { AWS, dynamoDb, docClient }
+const s3 = new AWS.S3({
+  region: "us-east-1",
+  accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
+})
+
+export { AWS, dynamoDb, docClient, s3 }
