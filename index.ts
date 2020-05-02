@@ -4,13 +4,15 @@ import { GraphQLField } from "graphql"
 
 import { typeDefs } from "./src/schema.graphql"
 import { resolvers } from "./src/resolvers"
-import { AWS, dynamoDb, docClient } from "./src/context/aws"
+import { AWS, dynamoDb, docClient, s3 } from "./src/context/aws"
 
 const pubsub = new PubSub()
 export interface Context {
   pubsub: PubSub
+  AWS: typeof AWS
   dynamoDb: typeof dynamoDb
   docClient: typeof docClient
+  s3: typeof s3
   req: Request
   res: Response
 }
@@ -46,6 +48,7 @@ const server = new ApolloServer({
   context: request => ({
     ...request,
     AWS,
+    s3,
     dynamoDb,
     docClient,
     pubsub,

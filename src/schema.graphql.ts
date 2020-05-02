@@ -40,7 +40,7 @@ export const typeDefs = gql`
   }
 
   type Product {
-    PK: String
+    PK: ID
     SK: String
     createdAt: Date
     updatedAt: Date
@@ -48,7 +48,7 @@ export const typeDefs = gql`
   }
 
   type User {
-    PK: String
+    PK: ID
     SK: String
     createdAt: Date
     updatedAt: Date
@@ -58,7 +58,7 @@ export const typeDefs = gql`
   }
 
   type Vote {
-    PK: String
+    PK: ID
     SK: String
     createdAt: Date
     updatedAt: Date
@@ -67,12 +67,27 @@ export const typeDefs = gql`
     username: String
   }
 
+  type S3Payload {
+    signedPutObjectUrl: String!
+    objectUrl: String!
+  }
+
   type Mutation {
     createProduct(productName: String!): Product
     createTable: Table
     createUser(username: String!, email: String!): User
     createVote(productName: String!, username: String!): Vote
     updateProduct(productName: String!): Product
+    #
+    s3GetSignedPutObjectUrl(
+      fileName: String!
+      """
+      A standard MIME type describing thhe format of the object data.
+      jpg, jpeg, png, etc.
+      """
+      fileType: String!
+      fileSize: Int!
+    ): S3Payload!
   }
 
   type Query {
