@@ -4,6 +4,7 @@ export const typeDefs = gql`
   scalar Date
 
   directive @development on FIELD_DEFINITION
+  directive @auth on FIELD_DEFINITION
 
   type ProvisionedThroughput {
     LastIncreaseDateTime: String
@@ -76,11 +77,11 @@ export const typeDefs = gql`
     token: String!
   }
   type Mutation {
-    createProduct(productName: String!): Product
-    createTable: Table
-    createUser(username: String!, email: String!): User
-    createVote(productName: String!, username: String!): Vote
-    updateProduct(productName: String!): Product
+    createProduct(productName: String!): Product @auth
+    createTable: Table @development @auth
+    createUser(username: String!, email: String!): User @development
+    createVote(productName: String!, username: String!): Vote @auth
+    updateProduct(productName: String!): Product @auth
     #
     login(email: String!, password: String!, username: String!): AuthPayload
     signup(
@@ -98,11 +99,11 @@ export const typeDefs = gql`
       """
       fileType: String!
       fileSize: Int!
-    ): S3Payload!
+    ): S3Payload! @auth
   }
 
   type Query {
-    listTables: [String]
+    listTables: [String] @auth
     getProduct(productName: String!): Product
     getUser(username: String!, email: String!): User
     queryProducts: [Product]
@@ -110,6 +111,6 @@ export const typeDefs = gql`
     queryUsers: [User]
     queryVotesByEmail(email: String): [Vote]
     queryVotesByProduct(productName: String): [Vote]
-    scanProductsTable: [Product] @development
+    scanProductsTable: [Product] @development @auth
   }
 `
