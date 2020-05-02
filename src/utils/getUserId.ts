@@ -1,5 +1,6 @@
 import "dotenv/config"
 import * as jwt from "jsonwebtoken"
+import { AuthenticationError } from "apollo-server"
 
 import { Context } from "../../index"
 
@@ -28,5 +29,5 @@ export function getUserId(context: Context): string {
     return userId
   }
 
-  throw new Error("Not authenticated")
+  throw new AuthenticationError("Not authenticated")
 }
