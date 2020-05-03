@@ -1,5 +1,5 @@
-import * as Query from "./Query"
-import * as Mutation from "./Mutation"
+import * as tablesQuery from "./Tables/Queries"
+import * as tablesMutation from "./Tables/Mutations"
 import * as authMutations from "./Auth/Mutations"
 import * as productsQueries from "./Products/Queries"
 import * as productsMutations from "./Products/Mutations"
@@ -14,12 +14,17 @@ export enum TABLE_NAMES {
 }
 
 export const resolvers = {
-  Query: { ...Query, ...productsQueries, ...usersQueries, ...votesQueries },
+  Query: {
+    ...tablesQuery,
+    ...productsQueries,
+    ...usersQueries,
+    ...votesQueries,
+  },
   Mutation: {
-    ...Mutation,
     ...authMutations,
     ...productsMutations,
     ...s3Mutations,
+    ...tablesMutation,
     ...usersMutations,
     ...votesMutations,
   },
