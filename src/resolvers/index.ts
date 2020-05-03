@@ -3,6 +3,7 @@ import * as Mutation from "./Mutation"
 import * as authMutations from "./Auth/Mutations"
 import * as productsQueries from "./Products/Queries"
 import * as productsMutations from "./Products/Mutations"
+import * as s3Mutations from "./S3/Mutations"
 import * as usersQueries from "./Users/Queries"
 import * as usersMutations from "./Users/Mutations"
 import * as votesQueries from "./Votes/Queries"
@@ -18,6 +19,7 @@ export const resolvers = {
     ...Mutation,
     ...authMutations,
     ...productsMutations,
+    ...s3Mutations,
     ...usersMutations,
     ...votesMutations,
   },

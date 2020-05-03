@@ -1,5 +1,5 @@
 import type { ResolverFn } from "resolvers/ResolverFn"
-import { getAuthPayload } from "../../utils"
+import { getAuthPayload } from "../../../utils"
 
 type Args = {
   fileName: string
