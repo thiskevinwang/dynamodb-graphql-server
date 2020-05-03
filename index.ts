@@ -1,7 +1,7 @@
 import { ApolloServer, PubSub } from "apollo-server"
 import { Request, Response } from "express"
 
-import { typeDefs } from "./src/schema.graphql"
+import * as typeDefs from "./src/schema.graphql"
 import { resolvers } from "./src/resolvers"
 import { AWS, dynamoDb, docClient, s3 } from "./src/context/aws"
 import { AuthDirective, DevelopmentDirective } from "./src/directives"
@@ -18,7 +18,7 @@ export interface Context {
 }
 
 const server = new ApolloServer({
-  typeDefs,
+  typeDefs: Object.values(typeDefs),
   schemaDirectives: {
     development: DevelopmentDirective,
     auth: AuthDirective,

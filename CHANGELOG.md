@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.6.1] - 2020-05-03
+
+### Changes
+
+Split up _monolithic_ `typeDefs` in `schema.graphql.ts`
+
+- use multiple `gql` tags, and `extend type Query/Mutation`
+
+### Todo
+
+Co-locate TypeScript interfaces and GraphQL typedefs.
+
+- This will be significantly easier to grok, and update
+
+Rethink `/resolvers` folder structure
+
+- ❌ separating by `/Query` & `/Mutation` no longer makes sense.
+- ✅ separate by "Entity" or "Domain" probably makes more sense.
+
 ## [v0.6.0] - 2020-05-03
 
 ### Changes
