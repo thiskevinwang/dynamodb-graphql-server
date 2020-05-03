@@ -57,6 +57,7 @@ export const typeDefs = gql`
     firstName: String
     lastName: String
     email: String
+    avatarUrl: String
   }
 
   type Vote {
@@ -83,6 +84,7 @@ export const typeDefs = gql`
     createUser(username: String!, email: String!): User @development
     createVote(productName: String!, username: String!): Vote @auth
     updateProduct(productName: String!): Product @auth
+    updateUserAvatarUrl(avatarUrl: String!): User @auth
     #
     login(email: String!, password: String!, username: String!): AuthPayload
     signup(
