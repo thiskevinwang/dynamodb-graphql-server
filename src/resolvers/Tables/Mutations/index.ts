@@ -1,1 +1,1 @@
-export * from "./snacks"
+export { createTable } from "./createTable"
