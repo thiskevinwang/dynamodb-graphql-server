@@ -2,7 +2,7 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { TABLE_NAMES } from "../.."
+import { TableNames } from "../.."
 
 /**
  * @TODO email is unused for now
@@ -15,7 +15,7 @@ export const getUser: ResolverFn<any, Args> = async (
   { fieldName, parentType }
 ) => {
   const params: DocumentClient.GetItemInput = {
-    TableName: TABLE_NAMES.Snacks,
+    TableName: TableNames.SNACKS,
     Key: {
       PK: `USER#${username}`,
       SK: "#USER",

@@ -2,7 +2,7 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { TABLE_NAMES } from "../.."
+import { TableNames } from "../.."
 
 type Args = {
   productName: string
@@ -20,7 +20,7 @@ export const createProduct: ResolverFn<any, Args> = async (
    * @see https://stackoverflow.com/a/46531548/9823455
    */
   const params: DynamoDB.DocumentClient.PutItemInput = {
-    TableName: TABLE_NAMES.Snacks,
+    TableName: TableNames.SNACKS,
     Item: {
       PK: `PRODUCT#${productName}`,
       SK: `#PRODUCT`,

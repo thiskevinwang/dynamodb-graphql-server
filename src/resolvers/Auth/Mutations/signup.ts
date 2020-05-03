@@ -5,7 +5,7 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 import { APP_SECRET } from "../../../utils"
-import { TABLE_NAMES } from "../.."
+import { TableNames } from "../.."
 
 type Args = {
   password: string
@@ -37,7 +37,7 @@ export const signup: ResolverFn<Response, Args> = async (
     const passwordHash = await bcrypt.hash(password, 10)
 
     const params: DynamoDB.DocumentClient.PutItemInput = {
-      TableName: TABLE_NAMES.Snacks,
+      TableName: TableNames.SNACKS,
       Item: {
         PK: `USER#${username}`,
         SK: `#USER`,

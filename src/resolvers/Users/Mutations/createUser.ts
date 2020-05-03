@@ -2,7 +2,7 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { TABLE_NAMES } from "../.."
+import { TableNames } from "../.."
 
 type CreateUserArgs = {
   username: string
@@ -21,7 +21,7 @@ export const createUser: ResolverFn<any, CreateUserArgs> = async (
    * @see https://stackoverflow.com/a/46531548/9823455
    */
   const params: DynamoDB.DocumentClient.PutItemInput = {
-    TableName: TABLE_NAMES.Snacks,
+    TableName: TableNames.SNACKS,
     Item: {
       PK: `USER#${username}`,
       SK: `#USER`,

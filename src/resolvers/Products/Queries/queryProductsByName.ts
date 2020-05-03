@@ -2,7 +2,7 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { TABLE_NAMES } from "../.."
+import { TableNames } from "../.."
 
 type Args = { productName: string }
 export const queryProductsByName: ResolverFn<any, Args> = async (
@@ -12,7 +12,7 @@ export const queryProductsByName: ResolverFn<any, Args> = async (
   { fieldName, parentType }
 ) => {
   const params: DocumentClient.QueryInput = {
-    TableName: TABLE_NAMES.Snacks,
+    TableName: TableNames.SNACKS,
     KeyConditionExpression: "PK = :pk and begins_with(SK, :sk)",
     // ExpressionAttributeNames: {
     //   "#PK": "PK",

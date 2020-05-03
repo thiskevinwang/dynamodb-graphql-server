@@ -9,8 +9,8 @@ import * as usersMutations from "./Users/Mutations"
 import * as votesQueries from "./Votes/Queries"
 import * as votesMutations from "./Votes/Mutations"
 
-export enum TABLE_NAMES {
-  Snacks = "Snacks",
+export enum TableNames {
+  SNACKS = "Snacks",
 }
 
 export const resolvers = {

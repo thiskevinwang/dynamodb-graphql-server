@@ -2,7 +2,7 @@ import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { TABLE_NAMES } from "../.."
+import { TableNames } from "../.."
 
 export const scanProductsTable: ResolverFn = async (
   obj,
@@ -13,7 +13,7 @@ export const scanProductsTable: ResolverFn = async (
   const { docClient } = context
 
   const params: DocumentClient.ScanInput = {
-    TableName: TABLE_NAMES.Snacks,
+    TableName: TableNames.SNACKS,
     Limit: 50,
   }
 

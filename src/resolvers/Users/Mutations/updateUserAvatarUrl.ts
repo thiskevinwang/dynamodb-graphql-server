@@ -2,7 +2,7 @@ import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { TABLE_NAMES } from "../.."
+import { TableNames } from "../.."
 import { getAuthPayload } from "../../../utils"
 
 type Args = {
@@ -18,7 +18,7 @@ export const updateUserAvatarUrl: ResolverFn<any, Args> = async (
   const { username, email } = getAuthPayload(context)
 
   const params: DynamoDB.DocumentClient.UpdateItemInput = {
-    TableName: TABLE_NAMES.Snacks,
+    TableName: TableNames.SNACKS,
     Key: {
       PK: `USER#${username}`,
       SK: `#USER`,

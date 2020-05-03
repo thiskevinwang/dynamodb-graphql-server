@@ -3,7 +3,7 @@ import _ from "lodash"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 
-import { TABLE_NAMES } from "../.."
+import { TableNames } from "../.."
 
 type Args = {
   productName: string
@@ -18,7 +18,7 @@ export const createVote: ResolverFn<any, Args> = async (
   const { docClient } = context
 
   const params: DynamoDB.DocumentClient.PutItemInput = {
-    TableName: TABLE_NAMES.Snacks,
+    TableName: TableNames.SNACKS,
     Item: {
       PK: `USER#${username}`,
       SK: `VOTE#${productName}`,

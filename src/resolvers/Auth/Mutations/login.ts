@@ -4,7 +4,7 @@ import * as bcrypt from "bcryptjs"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
 import { APP_SECRET } from "../../../utils"
-import { TABLE_NAMES } from "../.."
+import { TableNames } from "../.."
 
 type Args = {
   password: string
@@ -22,7 +22,7 @@ export const login: ResolverFn<Response, Args> = async (
   { fieldName, parentType }
 ) => {
   const params: DocumentClient.GetItemInput = {
-    TableName: TABLE_NAMES.Snacks,
+    TableName: TableNames.SNACKS,
     Key: {
       PK: `USER#${username}`,
       SK: "#USER",
