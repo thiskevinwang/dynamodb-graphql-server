@@ -1,6 +1,5 @@
 export { getProduct } from "./getProduct"
-export { getUser } from "./getUser"
 export { queryProducts } from "./queryProducts"
 export { queryProductsByName } from "./queryProductsByName"
-export { queryUsers } from "./queryUsers"
+
 export { scanProductsTable } from "./scanProductsTable"
