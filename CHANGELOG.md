@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.6.2] - 2020-05-03
+
+### Changes
+
+:art: This re-organizes resolvers, by "domain/entity", rather than by "Query" & "Mutation".
+
+- :alembic: This also co-locates "typeDefs" with their respective resolvers. (experimental-ish)
+
+This introduces **no new functionality**.
+
+### Changelog
+
+- use '/Users/' resolver directory 2621912
+- use '/Votes/' resolver directory f0633bd
+- use '/Products/' resolver directory e32adce
+- use '/Auth/' resolver directory 236f979
+- use '/S3/' resolver directory 17a66fb
+- use '/Tables/' resolver directory d0d3e08
+- Use Apollo Enum naming convention … 4ded3f8
+- fix accidental nesting & duplicates f2449ed
+- co-locate 'gql' typeDefs 8386baa
+- add "Row" GraphQL interface … 2a72289
+
 ## [v0.6.1] - 2020-05-03
 
 ### Changes
