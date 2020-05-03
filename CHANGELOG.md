@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.6.0] - 2020-05-03
+
+### Changes
+
+Add 'updateUserAvatarUrl' resolver e4e7798
+
 ## [v0.5.0] - 2020-05-02
 
 ### Changes
