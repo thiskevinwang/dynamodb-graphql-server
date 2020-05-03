@@ -15,6 +15,18 @@ export const directivesTypeDef = gql`
   directive @auth on FIELD_DEFINITION
 `
 
+export const itemTypeDef = gql`
+  """
+  Implemented by every 'row' in the Dynamo table
+  """
+  interface Row {
+    PK: ID!
+    SK: String
+    createdAt: Date
+    updatedAt: Date
+  }
+`
+
 export const baseTypeDef = gql`
   type Mutation
   type Query

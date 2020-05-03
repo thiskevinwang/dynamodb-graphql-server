@@ -1,8 +1,8 @@
 import { gql } from "apollo-server"
 
 export const voteTypeDef = gql`
-  type Vote {
-    PK: ID
+  type Vote implements Row {
+    PK: ID!
     SK: String
     createdAt: Date
     updatedAt: Date

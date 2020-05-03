@@ -1,8 +1,8 @@
 import { gql } from "apollo-server"
 
 export const productTypeDef = gql`
-  type Product {
-    PK: ID
+  type Product implements Row {
+    PK: ID!
     SK: String
     createdAt: Date
     updatedAt: Date
