@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.7.0] - 2020-05-05
+
+### Changes
+
+This adds new functionality for `Channels` & `Messages`
+
+- `createChannel`
+- `queryChannels`
+- `createMessage`
+- `queryMessagesByChannel`
+
+Adds `getFormattedDate` util
+
+- formats a date as YYYYMMDD-HHMMSS
+
+### Changelog
+
+https://github.com/thiskevinwang/dynamodb-graphql-server/compare/v0.6.2...v0.7.0
+
 ## [v0.6.2] - 2020-05-03
 
 ### Changes
