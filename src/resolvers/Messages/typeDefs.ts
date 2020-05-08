@@ -1,7 +1,14 @@
 import { gql } from "apollo-server"
 
 export const messageTypeDef = gql`
-  type Message implements Row {
+  interface MessageAttr {
+    deletedAt: Date
+    channelName: String
+    username: String
+    body: String
+  }
+
+  type Message implements Row & MessageAttr {
     PK: ID! # MESSAGE#<channelName>
     SK: String # USER#<username>
     createdAt: Date

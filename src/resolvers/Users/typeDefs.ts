@@ -1,7 +1,14 @@
 import { gql } from "apollo-server"
 
 export const userTypeDef = gql`
-  type User implements Row {
+  interface UserAttr {
+    username: String
+    firstName: String
+    lastName: String
+    email: String
+    avatarUrl: String
+  }
+  type User implements Row & UserAttr {
     PK: ID!
     SK: String
     createdAt: Date
