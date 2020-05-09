@@ -39,7 +39,7 @@ export const dynamoTableTypeDef = gql`
   Maybe use union type
   http://spec.graphql.org/draft/#sec-Interfaces.Interfaces-Implementing-Interfaces
   """
-  type TableItem implements Row & ChannelAttr & MessageAttr & ProductAttr & UserAttr & VoteAttr {
+  type TableItem implements Row & ChannelAttr & MessageAttr & UserAttr {
     # Row
     PK: ID!
     SK: String
