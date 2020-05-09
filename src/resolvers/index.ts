@@ -6,6 +6,8 @@ import * as messagesQueries from "./Messages/Queries"
 import * as s3Mutations from "./S3/Mutations"
 import * as tablesMutation from "./Tables/Mutations"
 import * as tablesQueries from "./Tables/Queries"
+import * as teamsQueries from "./Teams/Queries"
+import * as teamsMutations from "./Teams/Mutations"
 import * as usersMutations from "./Users/Mutations"
 import * as usersQueries from "./Users/Queries"
 
@@ -19,6 +21,7 @@ export const resolvers = {
     ...messagesQueries,
     ...tablesQueries,
     ...usersQueries,
+    ...teamsQueries,
   },
   Mutation: {
     ...authMutations,
@@ -27,6 +30,7 @@ export const resolvers = {
     ...s3Mutations,
     ...tablesMutation,
     ...usersMutations,
+    ...teamsMutations,
   },
 }
 

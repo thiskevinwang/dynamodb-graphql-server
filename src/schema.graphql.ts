@@ -5,6 +5,7 @@ export { channelTypeDef } from "./resolvers/Channels/typeDefs"
 export { dynamoTableTypeDef } from "./resolvers/Tables/typeDefs"
 export { messageTypeDef } from "./resolvers/Messages/typeDefs"
 export { userTypeDef } from "./resolvers/Users/typeDefs"
+export { teamsTypeDef } from "./resolvers/Teams/typeDefs"
 
 export const dataScalarTypeDef = gql`
   scalar Date
