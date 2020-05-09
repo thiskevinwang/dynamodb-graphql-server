@@ -11,3 +11,5 @@ package-lock.json
 __mocks__
 
 csv/
+
+.serverless
