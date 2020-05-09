@@ -1,7 +1,11 @@
 import { gql } from "apollo-server"
 
 export const channelTypeDef = gql`
-  type Channel implements Row {
+  interface ChannelAttr {
+    channelName: String
+    description: String
+  }
+  type Channel implements Row & ChannelAttr {
     PK: ID!
     SK: String
     createdAt: Date

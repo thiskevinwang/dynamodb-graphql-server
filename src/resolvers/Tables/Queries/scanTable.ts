@@ -4,7 +4,7 @@ import type { ResolverFn } from "resolvers/ResolverFn"
 
 import { TableNames } from "../.."
 
-export const scanProductsTable: ResolverFn = async (
+export const scanTable: ResolverFn = async (
   obj,
   args,
   context,

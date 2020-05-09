@@ -17,6 +17,10 @@ export const directivesTypeDef = gql`
   directive @auth on FIELD_DEFINITION
 `
 
+/**
+ * Implement Multiple Interface:
+ * @see https://stackoverflow.com/a/45229099/9823455
+ */
 export const itemTypeDef = gql`
   """
   Implemented by every 'row' in the Dynamo table

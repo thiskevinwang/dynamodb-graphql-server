@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.7.1] - 2020-05-09
+
+### Added
+
+- scanToCsv script
+- make new interfaces; combine with Row interface 870d8f4
+
+### Changes
+
+- rename scanProductsTable to scanTable
+
+### Changelog
+
+https://github.com/thiskevinwang/dynamodb-graphql-server/compare/v0.7.0...v0.7.1
+
 ## [v0.7.0] - 2020-05-05
 
 ### Changes

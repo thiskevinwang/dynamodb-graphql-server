@@ -1,7 +1,12 @@
 import { gql } from "apollo-server"
 
 export const voteTypeDef = gql`
-  type Vote implements Row {
+  interface VoteAttr {
+    productName: String
+    rating: Float
+    username: String
+  }
+  type Vote implements Row & VoteAttr {
     PK: ID!
     SK: String
     createdAt: Date

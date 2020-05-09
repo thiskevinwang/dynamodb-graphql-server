@@ -9,3 +9,5 @@ package-lock.json
 .env
 .now
 __mocks__
+
+csv/

@@ -1,7 +1,10 @@
 import { gql } from "apollo-server"
 
 export const productTypeDef = gql`
-  type Product implements Row {
+  interface ProductAttr {
+    productName: String
+  }
+  type Product implements Row & ProductAttr {
     PK: ID!
     SK: String
     createdAt: Date
@@ -16,6 +19,5 @@ export const productTypeDef = gql`
     getProduct(productName: String!): Product
     queryProducts: [Product]
     queryProductsByName(productName: String): [Product]
-    scanProductsTable: [Product] @development @auth
   }
 `
