@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.8.0] - DRAFT 1
+
+### Added
+
+'Teams'
+
+- createTeamChannel
+- queryTeamChannels
+- createTeam
+- getTeam
+
 ## [v0.7.1] - 2020-05-09
 
 ### Added
