@@ -22,7 +22,7 @@ export const createTeamChannel: ResolverFn<any, Args> = async (
     TableName: TableNames.SNACKS,
     Item: {
       PK: `TEAM#${teamName}`,
-      SK: `#CHANNEL#${channelName}`,
+      SK: `CHANNEL#${channelName}`,
       createdAt: new Date().toISOString(),
       teamName,
       channelName,
