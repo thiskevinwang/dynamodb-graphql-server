@@ -17,7 +17,7 @@ export const queryTeamChannels: ResolverFn<any, Args> = async (
     // ExpressionAttributeNames: { "#PK": "PK", "#SK": "SK" }
     ExpressionAttributeValues: {
       ":pk": `TEAM#${teamName}`,
-      ":sk": `#CHANNEL#`,
+      ":sk": `CHANNEL#`,
     },
     // IndexName: "GSI_InvertedIndex",
     Limit: 10,
