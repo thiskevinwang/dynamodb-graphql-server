@@ -7,13 +7,14 @@ import { TableNames } from "../.."
 import { getFormattedDate } from "../../../utils"
 
 type Args = {
+  teamName: string
   channelName: string
   username: string
   body: string
 }
 export const createMessage: ResolverFn<any, Args> = async (
   obj,
-  { channelName, username, body },
+  { teamName, channelName, username, body },
   context,
   { fieldName, parentType }
 ) => {
@@ -21,9 +22,13 @@ export const createMessage: ResolverFn<any, Args> = async (
   const params: DynamoDB.DocumentClient.PutItemInput = {
     TableName: TableNames.SNACKS,
     Item: {
-      PK: `CHANNEL#${channelName}`,
-      SK: `MESSAGE#${username}#${getFormattedDate(new Date())}`,
+      PK: `TEAM#${teamName}`,
+      SK:
+        `#CHANNEL#${channelName}` +
+        `#MESSAGE#${username}` +
+        `#DATE#${getFormattedDate(new Date())}`,
       createdAt: new Date().toISOString(),
+      teamName,
       channelName,
       username,
       body,
@@ -45,17 +50,17 @@ export const createMessage: ResolverFn<any, Args> = async (
      *
      * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html
      */
-    ConditionExpression: "#PK <> :pk", // put succeed if # !== :
+    ConditionExpression: "#SK <> :sk", // put succeed if # !== :
 
     /**
      * use this to avoid the error:
      * _"Invalid ConditionExpression: Attribute name is a reserved keyword;_
      */
     ExpressionAttributeNames: {
-      "#PK": "PK", // set # === Item.location
+      "#SK": "SK", // set # === Item.location
     },
     ExpressionAttributeValues: {
-      ":pk": `CHANNEL#${channelName}`,
+      ":sk": `CHANNEL#${channelName}`,
     },
 
     /**

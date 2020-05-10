@@ -16,5 +16,6 @@ export const teamsTypeDef = gql`
   }
   extend type Query {
     getTeam(teamName: String!): Team
+    queryTeams: [Team]
   }
 `

@@ -1,1 +1,1 @@
-export { queryMessagesByChannel } from "./queryMessagesByChannel"
+export { queryMessages } from "./queryMessages"
