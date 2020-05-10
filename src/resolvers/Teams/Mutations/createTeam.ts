@@ -1,3 +1,4 @@
+import { UserInputError } from "apollo-server"
 import DynamoDB from "aws-sdk/clients/dynamodb"
 
 import type { ResolverFn } from "resolvers/ResolverFn"
@@ -5,11 +6,11 @@ import type { ResolverFn } from "resolvers/ResolverFn"
 import { TableNames } from "../.."
 
 type Args = {
-  productName: string
+  teamName: string
 }
-export const createProduct: ResolverFn<any, Args> = async (
+export const createTeam: ResolverFn<any, Args> = async (
   obj,
-  { productName },
+  { teamName },
   context,
   { fieldName, parentType }
 ) => {
@@ -22,30 +23,15 @@ export const createProduct: ResolverFn<any, Args> = async (
   const params: DynamoDB.DocumentClient.PutItemInput = {
     TableName: TableNames.SNACKS,
     Item: {
-      PK: `PRODUCT#${productName}`,
-      SK: `#PRODUCT`,
+      PK: `TEAM#${teamName}`,
+      SK: `#TEAM`,
       createdAt: new Date().toISOString(),
-      productName,
+      teamName,
     },
     /**
-     * ConditionExpression
-     * @see https://stackoverflow.com/a/46531548/9823455
-     * @type {String}
-     * - A condition that must be satisfied in order for a conditional PutItem operation to succeed.
-     *   - True => put succeeds
-     *
-     * An expression can contain any of the following:
-     *
-     * Functions: attribute_exists | attribute_not_exists | attribute_type | contains | begins_with | size
-     * These function names are case-sensitive.
-     *
-     * Comparison operators: ` = | <> | < | > | <= | >= | BETWEEN | IN `
-     * Logical operators: ` AND | OR | NOT`
-     *
      * @see https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.SpecifyingConditions.html
      */
     ConditionExpression: "#PK <> :pk", // put succeed if # !== :
-
     /**
      * use this to avoid the error:
      * _"Invalid ConditionExpression: Attribute name is a reserved keyword;_
@@ -54,7 +40,7 @@ export const createProduct: ResolverFn<any, Args> = async (
       "#PK": "PK", // set # === Item.location
     },
     ExpressionAttributeValues: {
-      ":pk": `PRODUCT#${productName}`,
+      ":pk": `TEAM#${teamName}`,
     },
 
     /**
@@ -73,10 +59,11 @@ export const createProduct: ResolverFn<any, Args> = async (
     .promise()
     .then(res => {
       console.info(parentType.name, fieldName, res)
-      return res.Attributes
+      // return res.Attributes
+      return params.Item
     })
     .catch(err => {
       console.error(parentType.name, fieldName, err.message)
-      throw err
+      throw new UserInputError("A team already exists with that name")
     })
 }

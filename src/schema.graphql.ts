@@ -4,9 +4,8 @@ export { authTypeDef } from "./resolvers/Auth/typeDefs"
 export { channelTypeDef } from "./resolvers/Channels/typeDefs"
 export { dynamoTableTypeDef } from "./resolvers/Tables/typeDefs"
 export { messageTypeDef } from "./resolvers/Messages/typeDefs"
-export { productTypeDef } from "./resolvers/Products/typeDefs"
 export { userTypeDef } from "./resolvers/Users/typeDefs"
-export { voteTypeDef } from "./resolvers/Votes/typeDefs"
+export { teamsTypeDef } from "./resolvers/Teams/typeDefs"
 
 export const dataScalarTypeDef = gql`
   scalar Date

@@ -21,6 +21,7 @@ export const messageTypeDef = gql`
 
   extend type Mutation {
     createMessage(
+      teamName: String!
       channelName: String!
       username: String!
       body: String!
@@ -28,7 +29,7 @@ export const messageTypeDef = gql`
   }
 
   extend type Query {
-    queryMessagesByChannel(channelName: String): [Message]
+    queryMessages(teamName: String!, channelName: String!): [Message]
     # queryMessagesByEmail(email: String): [Message]
   }
 `

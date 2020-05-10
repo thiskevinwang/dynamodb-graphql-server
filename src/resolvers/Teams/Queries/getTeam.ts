@@ -4,18 +4,18 @@ import type { ResolverFn } from "resolvers/ResolverFn"
 
 import { TableNames } from "../.."
 
-type Args = { productName: string }
-export const getProduct: ResolverFn<any, Args> = async (
+type Args = { teamName: string }
+export const getTeam: ResolverFn<any, Args> = async (
   obj,
-  { productName },
+  { teamName },
   { docClient },
   { fieldName, parentType }
 ) => {
   const params: DocumentClient.GetItemInput = {
     TableName: TableNames.SNACKS,
     Key: {
-      PK: `PRODUCT#${productName}`,
-      SK: "#PRODUCT",
+      PK: `TEAM#${teamName}`,
+      SK: `#TEAM`,
     },
   }
   return docClient

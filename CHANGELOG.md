@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.8.0] - 2020-05-09
+
+### Added
+
+- new functionality to support "Teams"
+- added `queryTeams`
+- renamed `queryMessagesByChannel` to `queryMessages`
+- exposed `teamName` param on `createMessage`
+- update SK in queryTeamChannels
+  - `CHANNEL#`
+  - prevents clash with MESSAGES when using `begins_with()`
+- update createTeamChannel SK
+  - `CHANNEL#${channelName}`
+  - this prevents clash between messages, when using `begins_with()`
+- add Entities.md
+  - for my own sake
+
+### Changelog
+
+https://github.com/thiskevinwang/dynamodb-graphql-server/compare/v0.7.1...v0.8.0
+
 ## [v0.7.1] - 2020-05-09
 
 ### Added
